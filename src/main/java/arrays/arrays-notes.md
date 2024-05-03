@@ -42,9 +42,9 @@ The better approach is to keep track of the largest and second largest element
     }
 ```
 
-
+### Maximum Index
 ```text
-Maximum Index
+
 Given an array a of n positive integers. The task is to find the 
 maximum of j - i subjected to the constraint of a[i] < a[j] and i < j.
 
@@ -86,8 +86,9 @@ sc : O(n)
         return ans;
     }
 ```
+### Check if array is sorted and rotated
 ```text
-Check if array is sorted and rotated
+
 When the array is sorted and rotated, so in this case when the previous 
 element is greater than the current element will occur only once. If 
 this occurs zero times or more than one times then the array is not properly sorted and rotated
@@ -109,9 +110,9 @@ public boolean check(int[] nums) {
         return false;      
     }
 ```
-
+### Maximum occured integer in the given range
 ````text
-Maximum occured integer in the given range
+
 Problem : Given two arrays L[] and R[] of size N where L[i] and R[i] (0 ? L[i], R[i] < 106)denotes a range 
 of numbers, the task is to find the maximum occurred integer in all the ranges. If more than one such integer 
 exists, print the smallest one
@@ -147,9 +148,9 @@ the efficient solution is use the prefix sum
     return index;
 }
 ```
+### Rearrange Array Alternately
+```text
 
-````text
-Rearrange Array Alternately
 Given a sorted array of positive integers. Your task is to rearrange the array elements alternatively i.e first element should be max value,
 second should be min value, third should be second max, fourth should be second min and so on.
 Note: Modify the original array itself. Do it without using any extra space. You do not have to return anything.
@@ -181,7 +182,7 @@ The pseudo-code for the above-discussed algorithm can be:
         update a[currentIndex] = a[currentIndex] + (A[i] % greaterMax) * greaterMax
         increment i by 1 i.e. i++
         
-````
+```
 ![img.png](..%2F..%2F..%2F..%2F.gitbook%2Fassets%2Fimg.png)
 ````java
   public static void rearrange(long arr[], int n){
@@ -206,7 +207,7 @@ The pseudo-code for the above-discussed algorithm can be:
         
     }
 ````
-
+### First Missing Positive
 ```text
 Smallest Positive missing number OR 41. First Missing Positive
 Given an unsorted integer array nums. Return the smallest positive integer that is not present in nums.
@@ -295,7 +296,7 @@ Return n + 1, the smallest missing positive number when each number in nums is i
         nums[index2] = temp;
     }
 ```
-
+### Buy and sell Stock
 ```text
 The cost of stock on each day is given in an array A[] of size N. Find all the segments of days on which you buy and sell the stock such that the sum of difference between sell and buy prices is maximized. Each segment consists of indexes of two elements, first is index of day on which you buy stock and second is index of day on which you sell stock.
 Note: Since there can be multiple solutions, the driver code will print 1 if your answer is correct, otherwise, it will return 0. In case there's no profit the driver code will print the string "No Profit" for a correct solution.
@@ -347,7 +348,7 @@ bought at | Sold at | pair (index of bought at, index of sold at)
         return list;
     }
 ```
-
+### Buy and Sell a Share at most twice
 ```text
 Buy and Sell a Share at most twice
 In daily share trading, a buyer buys shares in the morning and sells them on the same day. If the trader is allowed to make at most 2 transactions in a day, the second transaction can only start after the first one is complete (buy->sell->buy->sell). The stock prices throughout the day are represented in the form of an array of prices. 
@@ -397,6 +398,7 @@ SC : O(n)
     }
 ```
 
+### Trapping Rain Water
 ```text
 42. Trapping Rain Water
 Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
@@ -473,7 +475,7 @@ static long trap(int arr[], int n){
     return ans;
 }
 ```
-
+### Largest Sum Contiguous Subarray
 ```text
 Kadane’s Algorithm : Largest Sum Contiguous Subarray
 Approach:
@@ -504,7 +506,7 @@ long maxSubarraySum(int arr[], int n){
 
     }
 ```
-
+### Maximum circular subarray sum
 ```text
 Maximum circular subarray sum
 Given a circular array of size n, find the maximum subarray sum of the non-empty subarray.
@@ -585,7 +587,7 @@ public static int maxCircularSum(int a[], int n)
     return Math.max(max_so_far, sum - min_so_far);
 }
 ```
-
+### Longest Even Odd Subarray
 ```text
 Longest Even Odd Subarray
 Problem Statement: Given an array of N integers, find the length of the longest alternating even-odd subarray present in the array.
