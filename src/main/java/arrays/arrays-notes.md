@@ -295,3 +295,361 @@ Return n + 1, the smallest missing positive number when each number in nums is i
         nums[index2] = temp;
     }
 ```
+
+```text
+The cost of stock on each day is given in an array A[] of size N. Find all the segments of days on which you buy and sell the stock such that the sum of difference between sell and buy prices is maximized. Each segment consists of indexes of two elements, first is index of day on which you buy stock and second is index of day on which you sell stock.
+Note: Since there can be multiple solutions, the driver code will print 1 if your answer is correct, otherwise, it will return 0. In case there's no profit the driver code will print the string "No Profit" for a correct solution.
+N = 7
+A[] = {100,180,260,310,40,535,695}
+Output:
+1
+Explanation:
+One possible solution is (0 3) (4 6)
+We can buy stock on day 0,
+and sell it on 3rd day, which will 
+give us maximum profit. Now, we buy 
+stock on day 4 and sell it on day 6.
+Your Task:
+The task is to complete the function stockBuySell() which takes an array of A[] and N as input parameters and finds the days of buying and selling stock. The function must return a 2D list of integers containing all the buy-sell pairs i.e. the first value of the pair will represent the day on which you buy the stock and the second value represent the day on which you sell that stock. If there is No Profit, return an empty list.
+
+
+Expected Time Complexity: O(N)
+Expected Auxiliary Space: O(N)
+
+idea : 
+minus sign denotes stock bought and + denotes stock sold on that day
+bought at | Sold at | pair (index of bought at, index of sold at)
+100         180       [0, 1]
+180         260       [1, 2]
+260         310       [2, 3]
+40          535       [4, 5]
+535         695       [5, 6]
+
+-100+180-180+260-260+310-40+535-535+695
+```
+
+```java
+ ArrayList<ArrayList<Integer> > stockBuySell(int A[], int n) {
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+        int purchasePrice = A[0];
+        int day = 0;
+        for(int i=1;i<n;i++){
+            ArrayList<Integer> pair = new ArrayList<>();
+            if(A[i]>purchasePrice){
+                pair.add(day);
+                pair.add(i);
+                list.add(pair);
+            }
+              purchasePrice = A[i];
+              day = i;
+        }
+        
+        return list;
+    }
+```
+
+```text
+Buy and Sell a Share at most twice
+In daily share trading, a buyer buys shares in the morning and sells them on the same day. If the trader is allowed to make at most 2 transactions in a day, the second transaction can only start after the first one is complete (buy->sell->buy->sell). The stock prices throughout the day are represented in the form of an array of prices. 
+
+Given an array price of size n, find out the maximum profit that a share trader could have made.
+
+Example 1:
+
+Input:
+n = 6
+prices[] = {10,22,5,75,65,80}
+Output:
+87
+Explanation:
+Trader earns 87 as sum of 12, 75 Buy at 10, sell at 22, Buy at 5 and sell at 80.
+
+Create an array say profit of size n and initialize all its value to 0.
+Iterate price[] from right(n-1) to left(0) and update profit[i] such that profit[i] stores maximum profit achievable from one transaction in sub-array price[i..n-1].
+Iterate price[] from left to right and update profit[i] such that profit[i] stores maximum profit such that profit[i] contains maximum achievable profit from two transactions in sub-array price[0..i].
+After completing the iteration print value of profit[n-1].
+
+TC : O(n)
+SC : O(n)
+```
+
+```java
+ public static int maxProfit(int n, int[] price) {
+        // code here
+
+       int[] profits = new int[n];
+       int maxPrice = price[n-1];
+       for(int i=n-2;i>=0;i--){
+           if(maxPrice<price[i]){
+               maxPrice = price[i];
+           }
+           profits[i] = Math.max(profits[i+1], maxPrice - price[i]);
+       }
+
+       int minPrice = price[0];
+       for(int i=1;i<n;i++){
+           if(minPrice>price[i]){
+               minPrice = price[i];
+           }
+           profits[i] = Math.max(profits[i-1], profits[i]+ (price[i]- minPrice));
+       }
+        return profits[n-1];
+    }
+```
+
+```text
+42. Trapping Rain Water
+Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
+
+Example 1:
+
+Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
+Output: 6
+Explanation: The above elevation map (black section) is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped.
+Example 2:
+
+Input: height = [4,2,0,3,2,5]
+Output: 9
+ 
+Idea to use in both brute force and optimal solution is 
+1. find left highest bar and right highest bar
+2. find the minimum of two as the bar can contain the water of minimum height only
+3. while traversing deduct the arr[i] from minimum of left highest bar and right highest bar store in in trappedWater
+4. add the trappedwater to result.
+ 
+```
+```java
+// TC : O(n2)
+// SC 0(1)
+    static long trappingWater(int arr[], int n) {
+        // naive solution
+        // find the lb, rb
+        // find minimum water level min(lb,rb)
+        // find trapped water tw = wl height[i]
+        // sum up the trapped water
+        int res =0;
+        for(int i =1;i<n-1;i++){
+            int lb = arr[i];
+            // find the greatest left bar on left side
+            for(int j =0;j<i;j++){
+                if(arr[j]>lb){
+                    lb = arr[j];
+                }
+            }
+            // find the greatest right bar on right side
+            int rb = arr[i];
+            for(int j = i+1;j<n;j++){
+                if(arr[j]>rb){
+                    rb = arr[j];
+                }
+            }
+            int wl = Math.min(lb, rb);
+            int tw = wl-arr[i];
+            res += tw;
+        }
+        return res;
+    }
+    
+// TC : O(n)
+// SC 0(n)
+static long trap(int arr[], int n){
+    int[] left = new int[n];
+    int[] right = new int[n];
+
+    left[0] = arr[0];
+    for(int i=1; i<n; i++){
+        left[i] = Math.max(left[i-1],arr[i]);
+    }
+
+    right[n-1] =arr[n-1];
+    for(int i=n-2; i>=0; i--){
+        right[i] = Math.max(right[i+1],arr[i]);
+    }
+
+    long ans = 0;
+    for(int i=0; i<n; i++){
+        ans += Math.min(left[i],right[i])-arr[i];
+    }
+    return ans;
+}
+```
+
+```text
+Kadane’s Algorithm : Largest Sum Contiguous Subarray
+Approach:
+
+The idea of Kadane’s algorithm is to maintain a variable max_ending_here that stores the maximum sum contiguous subarray ending at current index and a variable max_so_far stores the maximum sum of contiguous subarray found so far, Everytime there is a positive-sum value in max_ending_here compare it with max_so_far and update max_so_far if it is greater than max_so_far.
+
+So the main Intuition behind Kadane’s Algorithm is, 
+
+The subarray with negative sum is discarded (by assigning max_ending_here = 0 in code).
+We carry subarray till it gives positive sum.
+
+{-2,-3,4,-1,-2,1,5,-3}
+```
+![img_1.png](..%2F..%2F..%2F..%2F.gitbook%2Fassets%2Fimg_1.png)
+
+```java
+long maxSubarraySum(int arr[], int n){
+        long max_so_far = Integer.MIN_VALUE;
+        long max_ending_here = 0;
+        for (int i = 0; i < n; i++) {
+            max_ending_here = max_ending_here + arr[i];
+            if (max_so_far < max_ending_here)
+                max_so_far = max_ending_here;
+            if (max_ending_here < 0)
+                max_ending_here = 0;
+        }
+        return max_so_far;
+
+    }
+```
+
+```text
+Maximum circular subarray sum
+Given a circular array of size n, find the maximum subarray sum of the non-empty subarray.
+
+Examples: 
+
+Input: arr[] = {8, -8, 9, -9, 10, -11, 12}
+Output: 22 
+Explanation: Subarray 12, 8, -8, 9, -9, 10 gives the maximum sum, that is 22.
+
+Input: arr[] = {10, -3, -4, 7, 6, 5, -4, -1} 
+Output:  23 
+Explanation: Subarray 7, 6, 5, -4, -1, 10 gives the maximum sum, that is 23.
+
+The naive solution is to use two loops to find the maximum sum but TC is O(n*n)
+Maximum Circular Subarray Sum using Kadane’s Algorithm:
+The idea is to modify Kadane’s algorithm to find a minimum contiguous subarray sum and the maximum contiguous
+subarray sum, then check for the maximum value between the max_value and the value left after subtracting min_value
+from the total sum.
+
+Follow the steps below to solve the given problem:
+
+We will calculate the total sum of the given array.
+We will declare the variable curr_max, max_so_far, curr_min, min_so_far as the first value of the array.
+Now we will use Kadane’s Algorithm to find the maximum subarray sum and minimum subarray sum.
+Check for all the values in the array:- 
+If min_so_far is equaled to sum, i.e. all values are negative, then we return max_so_far.
+Else, we will calculate the maximum value of max_so_far and (sum – min_so_far) and return it.
+```
+```java
+static int circularSubarraySum(int a[], int n) {
+
+        //brute
+        int res =a[0];
+        for(int i=0;i<n;i++){
+            int sum =a[i];
+            int currentMaxSum = a[i];
+            for(int j = 1;j<n;j++){
+                int index = (i+j) %n;
+                sum += a[index];
+                currentMaxSum = Math.max(currentMaxSum, sum);
+            }
+            res = Math.max(res, currentMaxSum);
+
+        }
+
+        return res;
+    }
+
+    
+    // TC O(n)
+   // SC O(1)
+public static int maxCircularSum(int a[], int n)
+{
+
+    if (n == 1)
+        return a[0];
+
+    int sum = 0;
+    for (int i = 0; i < n; i++) {
+        sum += a[i];
+    }
+    int curr_max = a[0], max_so_far = a[0],
+            curr_min = a[0], min_so_far = a[0];
+
+    for (int i = 1; i < n; i++)
+    {
+        curr_max = Math.max(curr_max + a[i], a[i]);
+        max_so_far = Math.max(max_so_far, curr_max);
+
+        curr_min = Math.min(curr_min + a[i], a[i]);
+        min_so_far = Math.min(min_so_far, curr_min);
+    }
+    if (min_so_far == sum) {
+        return max_so_far;
+    }
+
+    return Math.max(max_so_far, sum - min_so_far);
+}
+```
+
+```text
+Longest Even Odd Subarray
+Problem Statement: Given an array of N integers, find the length of the longest alternating even-odd subarray present in the array.
+Example 1:
+Input: arr[]={1, 2, 3, 4, 5, 7, 9}
+Output: 5
+Explanation: The longest subarray with alternate even odd subarray is {1,2,3,4,5}
+
+Example 2:
+Input: arr[]={2,3,4,6,10}
+Output: 3
+Explanation: The longest subarray with alternate even odd subarray is {2,3,4}
+
+Naive Approach:
+In this approach, we find the longest even-odd or odd-even subarray for every element and later find the 
+maximum length of them.
+
+We iterate through the array and for every element we again iterate through the array to find the subarray size.
+Later we find the maximum length 
+
+The following code explains this approach in a better way
+Time complexity: O(n^2)
+
+Space complexity: O(1)
+
+Optimal Approach: Simple Mathematics and Kadane’s Algorithm
+Everyone knows that the sum of two even/odd numbers is even but the sum of an even and an odd number is odd.
+
+We iterate through the array starting from the 2nd element and check if the sum of the previous element and current element is odd, we increment the size of the subarray, or else we choose the new subarray.
+
+This approach is very similar to our second approach.
+
+The following diagram explains the above approach
+
+https://takeuforward.org/data-structure/longest-even-odd-subarray/
+```
+
+```java
+// brute
+static void evenodd_naive(int arr[]) {
+    int ans = 0;
+    for (int i = 0; i < arr.length; i++) {
+        int count = 1;
+        for (int j = i + 1; j < arr.length; j++) {
+            if ((arr[j - 1] % 2 == 0 && arr[j] % 2 != 0) || (arr[j - 1] % 2 != 0 && arr[j]
+                    % 2 == 0)) {
+                count++;
+            } else break;
+        }
+        ans = Math.max(ans, count);
+    }
+
+    System.out.println("The length of the longest even-odd subarray is "+ans);
+}
+// optimal
+ static void evenodd_mathKadane(int arr[]) {
+     int ans = 0;
+     int count = 1;
+     for (int i = 1; i < arr.length; i++) {
+       if ((arr[i - 1] + arr[i]) % 2 != 0) { // extending the same subarray
+         count++;
+         ans = Math.max(ans, count);
+       } else count = 1; // choosing the new subarray
+     }
+     System.out.println("The length of the longest even-odd subarray is "+ans);
+   }
+```
