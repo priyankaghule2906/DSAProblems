@@ -1,3 +1,21 @@
+# Arrays Problems
+
+* Find largest and Second largest element in an array
+* Maximum Index Different
+* Check if array is sorted and rotated
+* Maximum occured integer in the given range
+* Rearrange Array Alternately
+* First Missing Positive
+* Buy and sell Stock
+* Buy and Sell a Share at most twice
+* Trapping Rain Water
+* Majority Element (moores algorithm)
+* Pascal Triangle
+
+# Sliding Window problem
+* Find Indexes of a subarray with given sum
+
+
 ### Find largest and Second largest element in an array
 
 ```text
@@ -42,7 +60,7 @@ The better approach is to keep track of the largest and second largest element
     }
 ```
 
-### Maximum Index
+### Maximum Index Different
 ```text
 
 Given an array a of n positive integers. The task is to find the 
@@ -654,4 +672,156 @@ static void evenodd_naive(int arr[]) {
      }
      System.out.println("The length of the longest even-odd subarray is "+ans);
    }
+```
+
+### Majority Element
+
+```text
+Naive Approach: 
+The basic solution is to have two loops and keep track of the maximum count for all different elements. 
+If the maximum count becomes greater than n/2 then break the loops and return the element having the maximum count. If the maximum count doesn’t become more than n/2 then the majority element doesn’t exist.
+
+Moore's Voting Algorithm is an efficient algorithm used to find the majority element in an array, i.e., an element that appears more than N/2 times, where N is the size of the array. 
+The algorithm was proposed by Robert S. Moore in 1981.
+
+Here's how Moore's Voting Algorithm works:
+
+* Finding a Potential Candidate:
+1. The algorithm iterates through the array, maintaining a candidate variable initialized to the first element of the array.
+2. It also maintains a count variable initialized to 1.
+3. For each subsequent element in the array, if the element is equal to the current candidate, the count is incremented. Otherwise, the count is decremented.
+   - If the count becomes zero, the current element becomes the new candidate, and the count is reset to 1.
+   - At the end of this process, the candidate variable holds a potential majority element.
+Verifying the Candidate:
+- Once a potential candidate is found, the algorithm verifies if it is indeed the majority element by counting its occurrences in the array.
+- If the count of the candidate in the array is greater than N/2, where N is the size of the array, then the candidate is considered the majority element.
+
+The key insight behind Moore's Voting Algorithm is that if a majority element exists in the array, it will cancel out the occurrences of all other elements.
+As a result, the remaining candidate (if any) after the algorithm completes is likely to be the majority element.
+
+One of the main advantages of Moore's Voting Algorithm is its efficiency, as it requires only a single pass through the array with constant space complexity.
+```
+```java
+static int majorityElement(int a[], int size)
+    {
+        int element = a[0];
+        int count = 1;
+        for(int i=1;i<size;i++){
+            if(element == a[i]){
+                count++;
+            } else {
+                count--;
+                
+                if(count == 0){
+                    element = a[i];
+                    count = 1;
+                }
+            }
+        }   
+        count =0;
+        for(int i=0;i<size;i++){
+            if(a[i]==element){
+                count++;
+            }
+        }
+        if(count > size/2){
+            return element;
+        }
+        return -1;
+    }
+```
+### Find Indexes of a subarray with given sum
+```text
+Given an unsorted array A of size N that contains only non negative integers, find a continuous sub-array that adds to a given number S and return the left and right index(1-based indexing) of that subarray.
+In case of multiple subarrays, return the subarray indexes which come first on moving from left to right.
+Note:- You have to return an ArrayList consisting of two elements left and right. In case no such subarray exists return an array consisting of element -1.
+Example 1:
+Input:
+N = 5, S = 12 A[] = {1,2,3,7,5} Output: 2 4
+Explanation: The sum of elements from 2nd position to 4th position is 12.
+
+Idea :
+Naive with O(n*n)
+The idea is to consider all subarrays one by one and check the sum of every subarray. Following program implements the given idea. 
+Run two loops: the outer loop picks a starting point i and the inner loop tries all subarrays starting from i.
+Follow the steps given below to implement the approach:
+
+Traverse the array from start to end.
+From every index start another loop from i to the end of the array to get all subarrays starting from i, and keep a variable currentSum to calculate the sum of every subarray.
+For every index in inner loop update currentSum = currentSum + arr[j]
+If the currentSum is equal to the given sum then print the subarray.
+
+Optimized solution with TC O(n) and SC O(1) using Sliding Window
+
+- Start with an empty subarray 
+- add elements to the subarray until the sum is less than x( given sum ). 
+- If the sum is greater than x, remove elements from the start of the current subarray.
+- Follow the steps given below to implement the approach:
+
+* Create two variables, start=0, currentSum = arr[0]
+* Traverse the array from index 1 to end.
+* Update the variable currentSum by adding current element, currentSum = currentSum + arr[i]
+* If the currentSum is greater than the given sum, update the variable currentSum as currentSum = currentSum – arr[start],
+and update start as, start++.
+* If the currentSum is equal to given sum, print the subarray and break the loop.
+
+```
+
+```java
+static ArrayList<Integer> subarraySum(int[] arr, int n, int sum) {
+        ArrayList<Integer> list = new ArrayList<>();
+        int currentSum = arr[0], start = 0, i;
+
+        for (i = 1; i <= n; i++) {
+            while (currentSum > sum && start < i - 1) {
+                currentSum = currentSum - arr[start];
+                start++;
+            }
+            if (currentSum == sum) {
+                int p = i - 1;
+                list.add(start+1);
+                list.add(p+1);
+                return list;
+            }
+            if (i < n)
+                currentSum = currentSum + arr[i];
+        }
+
+        list.add(-1);
+        return list;
+    }
+```
+
+### Pascal Triangle
+
+```text
+1 
+1 1 
+1 2 1 
+1 3 3 1 
+1 4 6 4 1 
+
+Intuition: In Pascal's triangle, each element is the sum of the two elements directly above it.
+```
+```java
+   public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> list = new ArrayList<>();
+        for(int i=0;i<numRows;i++){
+            List<Integer> row = new ArrayList<>();
+            for(int j=0;j<=i;j++){
+                if(j==0){
+                    row.add(1);
+                } else if(j==i){
+                    row.add(1);
+                } else {
+                    // access previous row
+                    List<Integer> prev = list.get(i-1);
+                    row.add(prev.get(j-1) + prev.get(j));
+                } 
+                
+            }
+            list.add(row);
+        } 
+        return list;
+    }
 ```
