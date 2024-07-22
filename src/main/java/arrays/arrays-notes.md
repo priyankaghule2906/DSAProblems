@@ -11,6 +11,12 @@
 * Trapping Rain Water
 * Majority Element (moores algorithm)
 * Pascal Triangle
+* Minimum Platforms
+* Set Matrix Zeroes
+* Rotate 2-d matrix by 90 degree
+* print matrix spirally 
+* Subarray Sum Equals K
+* Majority Element II
 
 # Sliding Window problem
 * Find Indexes of a subarray with given sum
@@ -802,7 +808,10 @@ static ArrayList<Integer> subarraySum(int[] arr, int n, int sum) {
 1 4 6 4 1 
 
 Intuition: In Pascal's triangle, each element is the sum of the two elements directly above it.
+https://www.youtube.com/watch?v=nFqeCXOJn0I
 ```
+
+![img.png](pascal triangle.png)
 ```java
    public List<List<Integer>> generate(int numRows) {
         List<List<Integer>> list = new ArrayList<>();
@@ -810,11 +819,11 @@ Intuition: In Pascal's triangle, each element is the sum of the two elements dir
             List<Integer> row = new ArrayList<>();
             for(int j=0;j<=i;j++){
                 if(j==0){
-                    row.add(1);
+                    row.add(1);  // if first element it has to be 1
                 } else if(j==i){
-                    row.add(1);
+                    row.add(1);  // if last element it has to be 1
                 } else {
-                    // access previous row
+                    // access previous row  in between element are sub of previous numbers
                     List<Integer> prev = list.get(i-1);
                     row.add(prev.get(j-1) + prev.get(j));
                 } 
@@ -822,6 +831,397 @@ Intuition: In Pascal's triangle, each element is the sum of the two elements dir
             }
             list.add(row);
         } 
+        return list;
+    }
+```
+
+* Minimum Platforms
+```text
+Given arrival and departure times of all trains that reach a railway station. Find the minimum number of platforms required for the railway station so that no train is kept waiting.
+Consider that all the trains arrive on the same day and leave on the same day. Arrival and departure time can never be the same for a train but we can have arrival time of one train equal to departure time of the other. At any given instance of time, same platform can not be used for both departure of a train and arrival of another train. In such cases, we need different platforms.
+
+Examples:
+
+Input: n = 6, arr[] = {0900, 0940, 0950, 1100, 1500, 1800}, 
+            dep[] = {0910, 1200, 1120, 1130, 1900, 2000}
+Output: 3
+
+```
+![img.png](../../../../.gitbook/assets/minimum_platforms.png)
+
+```java
+ static int findPlatform(int arr[], int dep[], int n)
+    {
+        Arrays.sort(arr);
+        Arrays.sort(dep);
+        int i=0;
+        int j=0;
+        int platforms=0;
+        int max = 0;
+        while(i<n && j<n){
+            if(arr[i] <= dep [j]){
+                platforms++;
+                i++;
+            } else {
+                platforms--;
+                j++;
+            }
+            if(platforms > max){
+                max = platforms;
+            }
+        }
+        return max;
+    }
+```
+
+* Set Matrix zeroes
+```text
+Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+Example 1:
+
+Input: matrix = [[1,1,1],[1,0,1],[1,1,1]]
+Output: [[1,0,1],[0,0,0],[1,0,1]]
+
+Example 2:
+
+Input: matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
+Output: [[0,0,0,0],[0,4,5,0],[0,3,1,0]]
+
+Approach 1
+Approach (Using two extra arrays):
+The steps are as follows:
+
+First, we will declare two arrays: a row array of size N and a col array of size M and both are initialized with 0.
+Then, we will use two loops(nested loops) to traverse all the cells of the matrix.
+If any cell (i,j) contains the value 0, we will mark ith index of row array i.e. row[i] and jth index of col array col[j] as 1. It signifies that all the elements in the ith row and jth column will be 0 in the final matrix.
+We will perform step 3 for every cell containing 0.
+Finally, we will again traverse the entire matrix and we will put 0 into all the cells (i, j) for which either row[i] or col[j] is marked as 1.
+Thus we will get our final matrix.
+
+Time Complexity: O(2*(N*M)), where N = no. of rows in the matrix and M = no. of columns in the matrix.
+Reason: We are traversing the entire matrix 2 times and each traversal is taking O(N*M) time complexity.
+
+Space Complexity: O(N) + O(M), where N = no. of rows in the matrix and M = no. of columns in the matrix.
+Reason: O(N) is for using the row array and O(M) is for using the col array.
+
+Approach 2 : is to use the first row and first column as the temp array to mark the zeroes
+
+The steps are as follows:
+
+First, we will traverse the matrix and mark the proper cells of 1st row and 1st column with 0 accordingly. The marking will be like this: if cell(i, j) contains 0, we will mark the i-th row i.e. matrix[i][0] with 0 and we will mark j-th column i.e. matrix[0][j] with 0.
+If i is 0, we will mark matrix[0][0] with 0 but if j is 0, we will mark the col0 variable with 0 instead of marking matrix[0][0] again.
+After step 1 is completed, we will modify the cells from (1,1) to (n-1, m-1) using the values from the 1st row, 1st column, and col0 variable.
+We will not modify the 1st row and 1st column of the matrix here as the modification of the rest of the matrix(i.e. From (1,1) to (n-1, m-1)) is dependent on that row and column.
+Finally, we will change the 1st row and column using the values from matrix[0][0] and col0 variable. Here also we will change the row first and then the column.
+If matrix[0][0] = 0, we will change all the elements from the cell (0,1) to (0, m-1), to 0.
+If col0 = 0, we will change all the elements from the cell (0,0) to (n-1, 0), to 0.
+```
+![img.png](../../../../.gitbook/assets/setMatrixZeroes.png)
+
+```java
+    public static void setZeroesO(int[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int rowColO = 1;
+
+        for (int i=0; i<rows;i++){
+            for(int j=0;j<cols;j++){
+                if(matrix[i][j] ==0){
+                    matrix[i][0] = 0;
+                    if(j==0){
+                        rowColO=0;
+                    } else {
+                        matrix[0][j] = 0;
+                    }
+                }
+            }
+        }
+
+        for(int i =1;i<rows;i++){
+            for(int j=1;j<cols;j++){
+                if (matrix[i][j] != 0) {
+                    if (matrix[0][j] == 0 || matrix[i][0] == 0) {
+                        matrix[i][j] = 0;
+                    }
+                }
+            }
+        }
+
+        if(matrix[0][0] == 0){
+            Arrays.fill(matrix[0], 0);
+        }
+        if(rowColO == 0){
+            for (int i=0;i<rows;i++){
+                matrix[i][0] = 0;
+            }
+        }
+
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+    }
+```
+
+* Rotate 2-d matrix by 90 degree
+```text
+You are given an n x n 2D matrix representing an image, rotate the image by 90 degrees (clockwise).
+
+You have to rotate the image in-place, which means you have to modify the input 2D matrix directly. DO NOT allocate another 2D matrix and do the rotation.
+
+Example 1:
+
+Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+Output: [[7,4,1],[8,5,2],[9,6,3]]
+
+Example 2:
+Input: matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]
+Output: [[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]
+ 
+```
+```text
+Brute Force Approach
+Approach: Take another dummy matrix of n*n, and then take the first row of the matrix and put it in the last column of the dummy matrix,
+take the second row of the matrix, and put it in the second last column of the matrix and so.
+```
+```java
+static int[][] rotate(int[][] matrix) {
+        int n = matrix.length;
+        int rotated[][] = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                rotated[j][n - i - 1] = matrix[i][j];
+            }
+        }
+        return rotated;
+    }
+    
+     // TC = SC = O(n*n) 
+```
+
+```text
+Approach:
+
+Step 1: Transpose the matrix. (transposing means changing columns to rows and rows to columns)
+
+Step 2: Reverse each row of the matrix.
+
+ TC = O(n*n)
+ SC = O(1) 
+```
+
+```java
+  public void rotate(int[][] matrix) {
+        // first find tranpose of a matrix 
+        int n = matrix.length;
+        for(int i =0;i<n;i++){
+            for (int j=i+1; j<n;j++){
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+        // then reverse individual rows
+        for(int i=0;i<n;i++){
+            for(int j=0; j<n/2;j++){
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[i][n-1-j];
+                matrix[i][n-1-j] = temp;
+            }
+        }
+    }
+```
+
+* print matrix spirally 
+![img.png](../../../../.gitbook/assets/spiral_matrix.png)
+ ```text
+In this approach, we will be using four loops to print all four sides of the matrix.
+
+1st loop: This will print the elements from left to right.
+
+2nd loop: This will print the elements from top to bottom.
+
+3rd loop: This will print the elements from right to left.
+
+4th loop: This will print the elements from bottom to top.
+
+In each outer loop traversal print the elements of a square in a clockwise manner.
+Print the top row, i.e. Print the elements of the top row from column index left to right and increase the count of the top so that it will move to the next row.
+Print the right column, i.e. Print the rightmost column from row index top to bottom and decrease the count of right.
+Print the bottom row, i.e. if top <= bottom, then print the elements of a bottom row from column right to left and decrease the count of bottom
+Print the left column, i.e. if left <= right, then print the elements of the left column from the bottom row to the top row and increase the count of left.
+Run a loop until all the squares of loops are printed.
+```
+![img.png](../../../../.gitbook/assets/spiralmat.png)
+
+```java
+ public static List<Integer> printSpiral(int[][] mat) {
+        
+        // Define ans list to store the result.
+        List<Integer> ans = new ArrayList<>();
+        
+        int n = mat.length; // no. of rows
+        int m = mat[0].length; // no. of columns
+        
+        // Initialize the pointers required for traversal.
+        int top = 0, left = 0, bottom = n - 1, right = m - 1;
+
+        // Loop until all elements are not traversed.
+        while (top <= bottom && left <= right) {
+
+            // For moving left to right
+            for (int i = left; i <= right; i++)
+                ans.add(mat[top][i]);
+
+            top++;
+
+            // For moving top to bottom.
+            for (int i = top; i <= bottom; i++)
+                ans.add(mat[i][right]);
+
+            right--;
+
+            // For moving right to left.
+            if (top <= bottom) {
+                for (int i = right; i >= left; i--)
+                    ans.add(mat[bottom][i]);
+
+                bottom--;
+            }
+
+            // For moving bottom to top.
+            if (left <= right) {
+                for (int i = bottom; i >= top; i--)
+                    ans.add(mat[i][left]);
+
+                left++;
+            }
+        }
+        return ans;
+    }
+
+```
+
+* Subarray Sum Equals K
+```text
+Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+A subarray is a contiguous non-empty sequence of elements within an array.
+
+Example 1:
+
+Input: nums = [1,1,1], k = 2
+Output: 2
+Example 2:
+
+Input: nums = [1,2,3], k = 3
+Output: 2
+
+solution
+Naive, run two loops and find the sum of each subarray if it is equals to k, if yes and increase the count
+TC O(n*n) 
+```
+```java
+ public int subarraySum(int[] nums, int k) {
+        int count =0;
+        for(int i=0;i<nums.length;i++){
+            int sum =0;
+            for(int j=i;j<nums.length;j++){
+                sum = sum + nums[j];
+                if(sum ==k){
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+```
+```text
+Second optimal solution is to use prefix sum concept
+we are going to use the concept of the prefix sum to solve this problem. 
+Here, the prefix sum of a subarray ending at index i simply means the sum of all the elements of that subarray.
+TC  : O(n)
+SP : O(n)
+```
+![prefixSumSubarray.png](..%2F..%2F..%2F..%2F.gitbook%2Fassets%2FprefixSumSubarray.png)
+
+```java
+public int subarraySum(int[] nums, int k) {
+       HashMap<Integer, Integer> map = new HashMap<>();
+       int ans=0, sum=0;
+       map.put(0,1);
+
+       for(int i=0;i<nums.length;i++){
+            sum = sum+nums[i];
+            int rsum = sum - k;
+            if(map.containsKey(rsum)){
+                ans += map.get(rsum);
+            }
+            map.put(sum, map.getOrDefault(sum, 0)+1);
+       }
+
+       return ans;
+    }
+```
+* Majority Element II
+```text
+Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times.
+
+A brute force approach is to iterate the array and store frequency of each number in a map 
+then traverse the map and find out if the any element appears more than n/3 time
+TC and SC O(n)
+
+A optimal solution can be achieved using moores voting algorithm
+if size of array is 9, n/3 is 3 so there can be maximum two elements only who could be greater than n/3
+
+so take two candidates and run a loop if they are really appearing n/3 times
+TC O(n) and SC O(1)
+```
+
+```java
+ public List<Integer> majorityElement(int[] nums) {
+        ArrayList<Integer> list  = new ArrayList<>();
+        int count1 =0, count2=0;
+        int firstM = Integer.MAX_VALUE;
+        int secondM = Integer.MIN_VALUE;
+        int n = nums.length;
+
+        for(int i=0;i<n;i++){
+            if(firstM == nums[i]){
+                count1++;
+            } else if (secondM == nums[i]){
+                count2++;
+            } else if (count1==0){
+                count1++;
+                firstM=nums[i];
+            } else if (count2==0){
+                count2++;
+                secondM=nums[i];
+            } else {
+                count1--;
+                count2--;
+            }
+        }
+
+        count1 =0;
+        count2 =0;
+         for(int i=0;i<n;i++){
+            if(firstM == nums[i]){
+                count1++;
+            }
+            if(secondM == nums[i]){
+                count2++;
+            }
+         }
+         if(count1 > n/3){
+            list.add(firstM);
+         }
+         if(count2 > n/3){
+            list.add(secondM);
+         }
         return list;
     }
 ```

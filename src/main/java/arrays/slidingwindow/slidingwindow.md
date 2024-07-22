@@ -30,5 +30,5 @@ Brute for solution is to run two loops and find the max element for each k windo
 
 Optimal solution is to use deque.
 Rule 1: we always maintain elements in deque in decreasing/ descending order
-Rule 2 : We always maitain the bound for window k
+Rule 2 : We always maintain the bound for window k
 ```
