@@ -17,6 +17,11 @@
 * print matrix spirally 
 * Subarray Sum Equals K
 * Majority Element II
+* 3 sum 
+* 3 sum closest
+* 4 sum
+* Largest subarray with 0 sum
+* Count the number of subarrays with given xor K
 
 # Sliding Window problem
 * Find Indexes of a subarray with given sum
@@ -1223,5 +1228,316 @@ TC O(n) and SC O(1)
             list.add(secondM);
          }
         return list;
+    }
+```
+
+* 3 sum
+```text
+Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+Notice that the solution set must not contain duplicate triplets.
+
+The naive approach with TC of O(n*n*n) is to run 3 loop sum the elements and check if they are equal to 0
+ Set<List<Integer>> st = new HashSet<>();
+for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                for (int k = j + 1; k < n; k++) {
+                    if (arr[i] + arr[j] + arr[k] == 0) {
+                        List<Integer> temp = Arrays.asList(arr[i], arr[j], arr[k]);
+                        temp.sort(null);
+                        st.add(temp);
+                    }
+                }
+            }
+        }
+        
+optimal solution is to use two pointer approach of 2 sum solution and run a loop to to pick an element to sum them up with elements at two pointer
+check if the sum is equal to 0 if not move left and right pointer accordingly
+Time Complexity: O(NlogN)+O(N2), where N = size of the array.        
+```
+
+```java
+    public List<List<Integer>> threeSum(int[] nums) {
+        if(nums==null || nums.length < 3){
+            return new ArrayList<>();
+        } 
+        Set<List<Integer>> set = new HashSet<>();
+        Arrays.sort(nums);
+        int n = nums.length;
+        for(int i=0;i<n;i++){
+            if(i>0 && nums[i] == nums[i-1]){
+                continue;
+            }
+            int left = i+1;
+            int right = n-1;
+            while(left < right){
+                int sum = nums[i] + nums[left] + nums [right];
+
+                if(sum == 0){
+                    set.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    left ++;
+                    right --;
+                } else if (sum < 0){
+                    left ++;
+                } else {
+                    right --;
+                }
+
+                
+            }
+        }
+        return new ArrayList<>(set);
+    }
+```
+
+* 3 sum closest
+```text
+Given an integer array nums of length n and an integer target, find three integers in nums such that the sum is closest to target.
+
+Return the sum of the three integers.
+
+You may assume that each input would have exactly one solution.
+
+This is an extension of 3 sum problem here along with the above solution, we need to check the minimum difference between the target sum 
+and sum of the elements
+TC : O(n*n) 
+```
+````java
+ public int threeSumClosest(int[] nums, int target) {
+        int result = nums[0] + nums[1] + nums [2];
+        int minDiff = Integer.MAX_VALUE;
+        Arrays.sort(nums);
+        int n = nums.length;
+        for(int i=0; i<n;i++){
+            int left = i+1;
+            int right = n-1;
+
+            while(left<right){
+                int sum = nums[i] + nums[left] + nums[right];
+                if(sum == target){
+                    return target;
+                } else if (sum < target){
+                    left ++;
+                } else {
+                    right--;
+                }
+
+                int diff = Math.abs(target - sum);
+                if(diff < minDiff){
+                    minDiff = diff;
+                    result = sum;
+                }
+
+            }
+        }
+        return result;
+    }
+````
+* 4 sum
+```text
+Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:
+
+0 <= a, b, c, d < n
+a, b, c, and d are distinct.
+nums[a] + nums[b] + nums[c] + nums[d] == target
+You may return the answer in any order.
+
+The naive approach is to run 4 loops with TC of O(n*n*n*)
+
+```
+```java
+public static List<List<Integer>> fourSum(int[] nums, int target) {
+    int n = nums.length; // size of the array
+    Set<List<Integer>> set = new HashSet<>();
+
+    // checking all possible quadruplets:
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            for (int k = j + 1; k < n; k++) {
+                for (int l = k + 1; l < n; l++) {
+                    // taking bigger data type
+                    // to avoid integer overflow:
+                    long sum = (long)nums[i] + nums[j];
+                    sum += nums[k];
+                    sum += nums[l];
+
+                    if (sum == target) {
+                        List<Integer> temp = Arrays.asList(nums[i], nums[j], nums[k], nums[l]);
+                        Collections.sort(temp);
+                        set.add(temp);
+                    }
+                }
+            }
+        }
+    }
+    List<List<Integer>> ans = new ArrayList<>(set);
+    return ans;
+}
+```
+```java
+// optimal approach uses TC of O(n*n*n) with the solution of 2 sum and 3 sum
+public List<List<Integer>> fourSum(int[] nums, int target) {
+    List<List<Integer>> result = new ArrayList<>();
+    if(nums==null || nums.length<4) return result;
+    int n = nums.length;
+    Arrays.sort(nums);
+    for(int i=0;i<n;i++){
+        // to skip duplicates
+        if(i>0 && nums[i]==nums[i-1]) continue;
+
+        for(int j=i+1;j<n;j++){
+            // to skip duplicates
+            if(j > i+1 && (nums[j]== nums[j-1])) continue;
+
+            int left = j+1;
+            int right = n-1;
+
+            while(left < right) {
+                long sum = nums[i] + nums[j] ;
+                sum +=nums[left];
+                sum +=nums[right];
+                if(sum == target) {
+                    result.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+                    left++;
+                    right--;
+
+                    while(left < right && nums[left] == nums[left-1]) left++;
+                    while(left < right && nums[right] == nums[right+1]) right--;
+
+                } else if(sum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+
+    }
+
+    return result;
+}
+
+```
+
+* Largest subarray with 0 sum
+```text
+Given an array having both positive and negative integers. The task is to compute the length of the largest subarray with sum 0.
+
+Examples:
+
+Input: arr[] = {15,-2,2,-8,1,7,10,23}, n = 8
+Output: 5
+Explanation: The largest subarray with sum 0 is -2 2 -8 1 7.
+
+Brute force solution is to run two loops and check if the sum of the subarray is 0 if yes, calculate the length ( O(n*n))
+```
+
+```java
+    int maxLen(int arr[], int n) {
+        // brute force solution
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            int sum = 0;
+            for (int j = i; j < n; j++) {
+                sum = sum + arr[j];
+                if(sum ==0){
+                    max = Math.max(max, j-i+1);
+                }
+            }
+        }
+        return max;
+    }
+```
+```text
+Optimal solution is to use concept of the prefix sum 
+The problem of finding the largest subarray with a sum of 0 can be solved using a hash map The logic behind the solution involves keeping track of the cumulative sum of elements as we traverse the array
+TC (n)
+SC (n)
+```
+
+```java
+  int maxLenO(int arr[], int n) {
+        // optimal solution
+        int max = 0;
+        int currSum = 0;
+        HashMap<Integer,Integer> map = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+           currSum +=arr[i];
+           if(currSum ==0){
+               max = i+1;
+           }
+           if(map.containsKey(currSum)){
+               max = Math.max(max, i - map.get(currSum));
+           } else {
+               map.put(currSum,i);
+           }
+        }
+        return max;
+    }
+```
+
+* Count the number of subarrays with given xor K
+ ```text
+Problem Statement: Given an array of integers A and an integer B. Find the total number of subarrays having bitwise XOR of all elements equal to k.
+Input Format:
+ A = [4, 2, 2, 6, 4] , k = 6
+Result:
+ 4
+Explanation:
+ The subarrays having XOR of their elements as 6 are  [4, 2], [4, 2, 2, 6, 4], [2, 2, 6], [6]
+ 
+ 
+```
+
+```java
+// brute 
+public static int subarraysWithXorK(int []a, int k) {
+    int n = a.length; //size of the given array.
+    int cnt = 0;
+
+    // Step 1: Generating subarrays:
+    for (int i = 0; i < n; i++) {
+        int xorr = 0;
+        for (int j = i; j < n; j++) {
+
+            //step 2:calculate XOR of all
+            // elements:
+            xorr = xorr ^ a[j];
+
+            // step 3:check XOR and count:
+            if (xorr == k) cnt++;
+        }
+    }
+    return cnt;
+}
+```
+![countNumberOfSubarrayWithGivenXor.png](..%2F..%2F..%2F..%2F.gitbook%2Fassets%2FcountNumberOfSubarrayWithGivenXor.png)
+
+```java
+ public static int subarraysWithXOR(int[] A, int B) {
+        HashMap<Integer, Integer> xorMap = new HashMap<>();
+        int xor = 0;
+        int count = 0;
+        
+        for (int i = 0; i < A.length; i++) {
+            xor ^= A[i];
+            
+            // If the cumulative XOR equals B, increment the count
+            if (xor == B) {
+                count++;
+            }
+            
+            // Calculate the required XOR that we need to form the target XOR B
+            int required_xor = xor ^ B;
+            
+            // If the required XOR exists in the map, add its frequency to the count
+            if (xorMap.containsKey(required_xor)) {
+                count += xorMap.get(required_xor);
+            }
+            
+            // Update the frequency of the current cumulative XOR in the map
+            xorMap.put(xor, xorMap.getOrDefault(xor, 0) + 1);
+        }
+        
+        return count;
     }
 ```
