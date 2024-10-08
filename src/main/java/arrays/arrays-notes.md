@@ -1,27 +1,27 @@
 # Arrays Problems
 
-* Find largest and Second largest element in an array
-* Maximum Index Different
-* Check if array is sorted and rotated
-* Maximum occured integer in the given range
-* Rearrange Array Alternately
-* First Missing Positive
-* Buy and sell Stock
-* Buy and Sell a Share at most twice
-* Trapping Rain Water
-* Majority Element (moores algorithm)
-* Pascal Triangle
-* Minimum Platforms
-* Set Matrix Zeroes
-* Rotate 2-d matrix by 90 degree
-* print matrix spirally 
-* Subarray Sum Equals K
-* Majority Element II
-* 3 sum 
-* 3 sum closest
-* 4 sum
-* Largest subarray with 0 sum
-* Count the number of subarrays with given xor K
+1. Find largest and Second largest element in an array
+2. Maximum Index Different
+3.  Check if array is sorted and rotated
+4. Maximum occured integer in the given range
+5. Rearrange Array Alternately
+6. First Missing Positive
+7. Buy and sell Stock
+8. Buy and Sell a Share at most twice
+9. Trapping Rain Water
+10. Majority Element (moores algorithm)
+11. Pascal Triangle
+12. Minimum Platforms
+13. Set Matrix Zeroes
+14. Rotate 2-d matrix by 90 degree
+15. print matrix spirally
+16. Subarray Sum Equals K
+17. Majority Element II
+18. 3 sum
+19. 3 sum closest
+20. 4 sum
+21. Largest subarray with 0 sum
+22. Count the number of subarrays with given xor K
 
 # Sliding Window problem
 * Find Indexes of a subarray with given sum
@@ -815,8 +815,8 @@ static ArrayList<Integer> subarraySum(int[] arr, int n, int sum) {
 Intuition: In Pascal's triangle, each element is the sum of the two elements directly above it.
 https://www.youtube.com/watch?v=nFqeCXOJn0I
 ```
+![pascal triangle.png](..%2F..%2F..%2F..%2F.gitbook%2Fassets%2Fpascal%20triangle.png)
 
-![img.png](pascal triangle.png)
 ```java
    public List<List<Integer>> generate(int numRows) {
         List<List<Integer>> list = new ArrayList<>();
@@ -972,7 +972,7 @@ If col0 = 0, we will change all the elements from the cell (0,0) to (n-1, 0), to
     }
 ```
 
-* Rotate 2-d matrix by 90 degree
+14. Rotate 2-d matrix by 90 degree
 ```text
 You are given an n x n 2D matrix representing an image, rotate the image by 90 degrees (clockwise).
 
@@ -1007,12 +1007,12 @@ static int[][] rotate(int[][] matrix) {
     
      // TC = SC = O(n*n) 
 ```
-
+![transpose.png](../../../../.gitbook/assets/transpose.png)![reverseEachrow.png](..%2F..%2F..%2F..%2F.gitbook%2Fassets%2FreverseEachrow.png)
 ```text
 Approach:
 
 Step 1: Transpose the matrix. (transposing means changing columns to rows and rows to columns)
-
+i.e Swap elements across the diagonal
 Step 2: Reverse each row of the matrix.
 
  TC = O(n*n)

@@ -1,4 +1,4 @@
-package arrays.slidingwindow;
+package slidingwindow;
 
 import org.junit.Test;
 
