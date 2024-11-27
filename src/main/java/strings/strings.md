@@ -2,6 +2,41 @@
 
 1. Group Anagrams (leetcode 46 medium)
 
+2. Longest Substring Without Repeating Characters:
+   Find the length of the longest substring without repeating characters in a given string.
+   https://leetcode.com/problems/longest-substring-without-repeating-characters/
+
+3. Minimum Window Substring:
+Given a string S and a string T, find the minimum window in S that contains all the characters of T.
+https://leetcode.com/problems/minimum-window-substring/
+4. Regular Expression Matching:
+Implement regular expression matching with support for '.' and '*'.
+https://leetcode.com/problems/regular-expression-matching/
+5. Edit Distance:
+Determine the minimum number of operations required to convert one string into another, where operations include insert, delete, and replace.
+https://leetcode.com/problems/edit-distance/
+6. String to Integer (atoi):
+Implement the atoi function which converts a string to an integer.
+https://leetcode.com/problems/string-to-integer-atoi/
+7. Group Anagrams:
+Given an array of strings, group anagrams together.
+https://leetcode.com/problems/group-anagrams/
+8. Longest Palindromic Substring:
+Find the longest palindromic substring in a given string.
+https://leetcode.com/problems/longest-palindromic-substring/
+9. ZigZag Conversion:
+Convert a given string into a zigzag pattern with a specified number of rows.
+https://leetcode.com/problems/zigzag-conversion/
+10. Valid Parentheses:
+Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+https://leetcode.com/problems/valid-parentheses/
+11. String Compression:
+Implement a method to perform basic string compression using the counts of repeated characters. For example, the string "aabcccccaaa" would become "a2b1c5a3".
+https://leetcode.com/problems/string-compression/
+
+
+
+
 1. Group Anagrams (leetcode 46 medium)
 ```text
 Given an array of strings strs, group the anagrams together. You can return the answer in any order.
@@ -73,3 +108,44 @@ N strings, this takes  O(N) time
         return new ArrayList<>(anagramsMap.values());
     }
 ```
+
+2. Longest Substring Without Repeating Characters:
+```text
+Given a string s, find the length of the longest substring without repeating characters.
+
+Example 1:
+Input: s = "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+```
+```text
+Approach with TC O(n)  and SC (1)
+1. use two pointers (start and end) to represent the current window of non-repeating characters.
+2. Use a HashSet or some boolean array to keep track of the characters in the current window.
+3. Move the end pointer to expand the window, and add each character to the HashSet.
+4. If a duplicate character is found, remove characters from the start until the duplicate is removed.
+5. Keep track of the maximum length of the substring seen so far.
+```
+
+```java
+    public int lengthOfLongestSubstring(String str) {
+       int max = 0;
+       boolean[] hash = new boolean[256];
+       int n = str.length();
+       int start =0;
+       int end =0;
+       while (end < n){
+
+           if(!hash[str.charAt(end)]){
+               hash[str.charAt(end)] = true;
+               max = Math.max(max, end-start+1);
+               end++;
+           } else {
+               hash[str.charAt(start)] = false;
+               start++;
+           }
+       }
+       return max;
+    }
+```
+
