@@ -1266,7 +1266,7 @@ Time Complexity: O(NlogN)+O(N2), where N = size of the array.
         for(int i=0;i<n;i++){
             if(i>0 && nums[i] == nums[i-1]){
                 continue;
-            }]
+            }
             int left = i+1;
             int right = n-1;
             while(left < right){
