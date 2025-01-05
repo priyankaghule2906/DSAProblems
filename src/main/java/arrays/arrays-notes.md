@@ -2,7 +2,7 @@
 
 1. Find largest and Second largest element in an array
 2. Maximum Index Different
-3.  Check if array is sorted and rotated
+3. Check if array is sorted and rotated
 4. Maximum occured integer in the given range
 5. Rearrange Array Alternately
 6. First Missing Positive
@@ -22,6 +22,7 @@
 20. 4 sum
 21. Largest subarray with 0 sum
 22. Count the number of subarrays with given xor K
+23. Maximum Product Subarray in an Array
 
 # Sliding Window problem
 * Find Indexes of a subarray with given sum
@@ -1539,4 +1540,255 @@ public static int subarraysWithXorK(int []a, int k) {
         
         return count;
     }
+```
+
+23. Maximum Product Subarray in an Array
+```text 
+Given an integer array nums, find a subarray that has the largest product, and return the product.
+The test cases are generated so that the answer will fit in a 32-bit integer.
+Example 1:
+
+Input: nums = [2,3,-2,4]
+Output: 6
+Explanation: [2,3] has the largest product 6.
+Example 2:
+
+Input: nums = [-2,0,-1]
+Output: 0
+Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
+```
+
+```text
+brute solution is to use 2 loops with O(n*n), to calculate the product and update the max product
+```
+```java
+   public int maxProduct(int[] nums) {
+        // Initialize result with first element of nums
+        int result = nums[0];
+
+        /* Iterate through each element
+        as a starting point of subarray */
+        for (int i = 0; i < nums.length - 1; i++) {
+            // Initialize p with nums[i]
+            int p = nums[i];
+
+            /* Iterate through subsequent elements
+            to form subarrays starting from nums[i] */
+            for (int j = i + 1; j < nums.length; j++) {
+                
+                /* Update result with the
+                max of current result and p */
+                result = Math.max(result, p);
+
+                // Update p by multiplying with nums[j]
+                p *= nums[j];
+            }
+
+            // Update result for subarray ending at nums[i]
+            result = Math.max(result, p);
+        }
+
+        // Return maximum product subarray found
+        return result;
+    }
+```
+
+```text
+Product Behavior:
+
+
+
+The product of two positive numbers is positive.
+
+The product of two negative numbers is also positive.
+
+The product of a positive and a negative number is negative.
+
+Zero resets the product, as any number multiplied by zero is zero.
+
+- A negative number can turn a small product into a large product when multiplied by another negative number. This means that when encountering negative numbers, we should consider both the maximum and minimum products up to that point
+- As we iterate through the array, we need to keep track of both the maximum product and the minimum product at each step because the minimum product could become the maximum product if multiplied by a negative number.
+- When we encounter a zero, the product resets. This means we need to start calculating products again from the next number.
+
+Algo 
+
+For each element in the array (starting from the second), do the following:
+
+If the current element is negative, swap maxEndingHere and minEndingHere because multiplying by a negative number will flip the signs.
+
+Update maxEndingHere to be the maximum of the current element and the product of the current element with the previous maxEndingHere.
+
+Update minEndingHere similarly but using the minimum.
+
+Update maxSoFar to be the maximum of itself and maxEndingHere.
+```
+
+```java
+    public int maxProduct(int[] nums) {
+        // Edge case: if the array is empty
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+
+        // Initialize variables
+        int maxEndingHere = nums[0];
+        int minEndingHere = nums[0];
+        int maxSoFar = nums[0];
+
+        // Iterate through the array starting from the second element
+        for (int i = 1; i < nums.length; i++) {
+            int currentNum = nums[i];
+
+            // If the current number is negative, swap max and min
+            if (currentNum < 0) {
+                int temp = maxEndingHere;
+                maxEndingHere = minEndingHere;
+                minEndingHere = temp;
+            }
+
+            // Update maxEndingHere and minEndingHere
+            maxEndingHere = Math.max(currentNum, maxEndingHere * currentNum);
+            minEndingHere = Math.min(currentNum, minEndingHere * currentNum);
+
+            // Update the overall maximum product found so far
+            maxSoFar = Math.max(maxSoFar, maxEndingHere);
+        }
+
+        return maxSoFar;
+    }
+```
+
+```text
+Let's perform a dry run of the Maximum Product Subarray algorithm using the input array: [2, 3, -2, -4, 3, -6]. We will track the values of maxEndingHere, minEndingHere, and maxSoFar at each step.
+
+
+Initial Setup
+Input Array: [2, 3, -2, -4, 3, -6]
+Initial Values:
+maxEndingHere = nums[0] = 2
+minEndingHere = nums[0] = 2
+maxSoFar = nums[0] = 2
+
+Iteration Steps
+
+1. i = 1 (currentNum = 3)
+
+Current Number: 3
+Since 3 is positive, we do not swap maxEndingHere and minEndingHere.
+Update maxEndingHere:
+maxEndingHere = max(3, 2 * 3) = max(3, 6) = 6
+Update minEndingHere:
+minEndingHere = min(3, 2 * 3) = min(3, 6) = 3
+
+Update maxSoFar:
+maxSoFar = max(2, 6) = 6
+Current State:
+maxEndingHere = 6
+minEndingHere = 3
+maxSoFar = 6
+
+2. i = 2 (currentNum = -2)
+
+Current Number: -2
+Since -2 is negative, we swap maxEndingHere and minEndingHere:
+temp = maxEndingHere = 6
+maxEndingHere = minEndingHere = 3
+minEndingHere = temp = 6
+
+Update maxEndingHere:
+maxEndingHere = max(-2, 3 * -2) = max(-2, -6) = -2
+Update minEndingHere:
+minEndingHere = min(-2, 6 * -2) = min(-2, -12) = -12
+
+Update maxSoFar:
+
+maxSoFar = max(6, -2) = 6
+
+Current State:
+maxEndingHere = -2
+
+minEndingHere = -12
+
+maxSoFar = 6
+
+3. i = 3 (currentNum = -4)
+
+
+Current Number: -4
+
+Since -4 is negative, we swap maxEndingHere and minEndingHere:
+
+temp = maxEndingHere = -2
+
+maxEndingHere = minEndingHere = -12
+
+minEndingHere = temp = -2
+
+Update maxEndingHere:
+maxEndingHere = max(-4, -12 * -4) = max(-4, 48) = 48
+Update minEndingHere:
+minEndingHere = min(-4, -2 * -4) = min(-4, 8) = -4
+Update maxSoFar:
+maxSoFar = max(6, 48) = 48
+
+
+Current State:
+maxEndingHere = 48
+minEndingHere = -4
+maxSoFar = 48
+
+4. i = 4 (currentNum = 3)
+
+
+Current Number: 3
+
+Since 3 is positive, we do not swap maxEndingHere and minEndingHere.
+
+Update maxEndingHere:
+maxEndingHere = max(3, 48 * 3) = max(3, 144) = 144
+Update minEndingHere:
+minEndingHere = min(3, -4 * 3) = min(3, -12) = -12
+
+Update maxSoFar:
+
+maxSoFar = max(48, 144) = 144
+Current State:
+
+maxEndingHere = 144
+minEndingHere = -12
+maxSoFar = 144
+
+5. i = 5 (currentNum = -6)
+
+
+Current Number: -6
+
+Since -6 is negative, we swap maxEndingHere and minEndingHere:
+
+temp = maxEndingHere = 144
+
+maxEndingHere = minEndingHere = -12
+
+minEndingHere = temp = 144
+
+Update maxEndingHere:
+maxEndingHere = max(-6, -12 * -6) = max(-6, 72) = 72
+Update minEndingHere:
+minEndingHere = min(-6, 144 * -6) = min(-6, -864) = -864
+
+Update maxSoFar:
+
+maxSoFar = max(144, 72) = 144
+
+Final State:
+
+maxEndingHere = 72
+minEndingHere = -864
+maxSoFar = 144
+Final Result
+After iterating through the entire array, the maximum product subarray is 144.
+
+The maximum product subarray for the input array [2, 3, -2, -4, 3, -6] is 144, which corresponds to the subarray [2, 3, -2, -4, 3].
+
+
 ```

@@ -38,7 +38,7 @@ Check if the exponent n is odd:
 If true, recursively calculate the power by multiplying the base with the result of the power function for n - 1.
 Example: power(x, n) = x * power(x, n - 1)
 ```
-![powerOfANumber.png](..%2F..%2F..%2F.gitbook%2Fassets%2FpowerOfANumber.png)
+![powerOfANumber.jpg](..%2F..%2F..%2F..%2F.gitbook%2Fassets%2FpowerOfANumber.jpg)
 
 ```java
 // recursive solution

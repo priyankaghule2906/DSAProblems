@@ -1,5 +1,6 @@
 # BinarySearch
 
+
 ## Problem Name
 
 *  Binary Search - Done
@@ -94,6 +95,19 @@ is "-1".
 
 Idea : There is a catch in the problem, the given array is sorted. The idea is to use Binary Search to find the floor of a number x in a sorted array by comparing it
 to the middle element and dividing the search space into half
+
+The array is sorted in ascending order. This allows us to efficiently search for the floor using binary search, rather than scanning the array one element at a time.
+
+When we look at the middle element of the array:
+If the middle element is smaller than 
+𝑥
+x, it could be the floor, but we need to check if there’s a larger element (closer to 
+𝑥
+x) on the right side.
+If the middle element is greater than 
+𝑥
+x, it cannot be the floor, so we move to the left side.
+By narrowing down the search space this way, we can quickly find the floor.
 
 ```
 
@@ -402,8 +416,7 @@ Example 2:
 Input: nums = [1,3,5,6], target = 2
 Output: 1
 
- if the element is not present, we have to find the nearest greater number of the target number. So, basically, we are trying to find an element arr[ind] >= x and hence the lower bound of the target number i.e. x.
-
+if the element is not present, we have to find the nearest greater number of the target number. So, basically, we are trying to find an element arr[ind] >= x and hence the lower bound of the target number i.e. x.
 The lower bound algorithm returns the first occurrence of the target number if the number is present and otherwise, it returns the nearest greater element of the target number.
 
 TC O(logn)
@@ -411,22 +424,26 @@ SC O(1)
 ```
 
 ```java
-public int searchInsert(int[] nums, int target) {
-        int n= nums.length;
-        int low = 0;
-        int high = n-1;
-        int pos = n;
-        while(low<=high){
-            int mid = low + (high-low)/2;
-            if(nums[mid]>=target){
-                pos = mid;
-                high = mid-1;
-            } else {
-                low = mid+1;
-            }
+ public static int searchInsert(int[] nums, int target) {
+    int left = 0;
+    int right = nums.length - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2; // Prevents overflow
+
+        if (nums[mid] == target) {
+            return mid; // Target found
+        } else if (nums[mid] < target) {
+            left = mid + 1; // Target is in the right half
+        } else {
+            right = mid - 1; // Target is in the left half
         }
-        return pos;
     }
+
+    // If not found, left is the insertion point
+    return left;
+}
+
 ```
 
 
