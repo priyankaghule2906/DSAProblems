@@ -6,7 +6,8 @@ public class MaximumProductSubarray {
 
     @Test
     public void test(){
-        int[] arr = new int[]{2,3,-2,-5,6,-1,4};
+//        int[] arr = new int[]{2,3,-2,-5,6,-1,4};
+        int[] arr = new int[]{2, 4, 6, -3, -2, 9, -10};
         System.out.println(getMaxProduct(arr));
     }
 

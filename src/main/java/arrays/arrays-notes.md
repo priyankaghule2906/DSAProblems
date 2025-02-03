@@ -17,6 +17,7 @@
 15. print matrix spirally
 16. Subarray Sum Equals K
 17. Majority Element II
+18. Two Sum
 18. 3 sum
 19. 3 sum closest
 20. 4 sum
@@ -1231,7 +1232,158 @@ TC O(n) and SC O(1)
         return list;
     }
 ```
+# Two Sum
+```text
+Given an array of integers nums and an integer target. Return the indices(0 - indexed) of two elements in nums such that they add up to target.
+Each input will have exactly one solution, and the same element cannot be used twice. Return the answer in non-decreasing order.
+Examples:
+Input: nums = [1, 6, 2, 10, 3], target = 7
 
+Output: [0, 1]
+
+Explanation: nums[0] + nums[1] = 1 + 6 = 7
+
+Input: nums = [1, 3, 5, -7, 6, -3], target = 0
+
+Output: [1, 5]
+
+Explanation: nums[1] + nums[5] = 3 + (-3) = 0
+
+Intuition
+The idea is to traverse the array and use a HashMap to check if for each element, an element in the HashMap exists, such that sum of both of the elements is equal to the target. This method trims down the search space and provides a better time complexity.
+
+Approach 
+Iterate in array from 0 to last index of the array (lets call this variable i).
+Then check if the other required element(i.e. target-arr[i]) exists in the hashMap.
+If that element exists, then return the current index i.e. i, and the index of the element found using map.
+If that element does not exist, then just store the current element in the hashMap along with its index. Because in the future, the current element might be a part of our answer.
+If at the end we have traversed whole array and no pair is found, that means that the target is unachievable. In this case, return {-1, -1}.
+
+TC = SC = O(1)
+```
+```java
+import java.util.*;
+
+class Solution {
+    /* Function to find two indices in the array `nums`
+       such that their elements sum up to `target`.
+    */
+    public int[] twoSum(int[] nums, int target) {
+        
+        // Map to store (element, index) pairs
+        Map<Integer, Integer> mpp = new HashMap<>();
+        
+        // Size of the nums array
+        int n = nums.length;
+        
+        for (int i = 0; i < n; i++) {
+            // Current number in the array
+            int num = nums[i];
+            
+            // Number needed to reach the target
+            int moreNeeded = target - num;
+
+            // Check if the complement exists in map
+            if (mpp.containsKey(moreNeeded)) {
+                /* Return the indices of the two
+                numbers that sum up to target*/
+                return new int[]{mpp.get(moreNeeded), i};
+            }
+
+            // Store current number and its index in map
+            mpp.put(num, i);
+        }
+
+        // If no such pair found, return {-1, -1}
+        return new int[]{-1, -1};
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        int[] nums = {2, 6, 5, 8, 11};
+        int target = 14;
+
+        // Create an instance of Solution class
+        Solution sol = new Solution();
+        
+        // Call the twoSum method from Solution class
+        int[] ans = sol.twoSum(nums, target);
+
+        // Print the result
+        System.out.println("Indices of the two numbers that sum up to " + target + " are: [" + ans[0] + ", " + ans[1] + "]");
+    }
+}
+
+```
+
+```text
+The two-pointer approach is another way to solve the Two Sum problem, but it works only if the input array is sorted. If the array is not sorted, you'll first need to sort it, which may change the indices of the elements. Here's the intuition and the implementation for the two-pointer approach.
+
+Intuition:
+
+Sort the array (if it is not already sorted).
+Use two pointers:
+One pointer starts at the beginning of the array (left).
+The other pointer starts at the end of the array (right).
+Calculate the sum of the numbers at the two pointers:
+If the sum equals the target, return the indices of the two numbers.
+If the sum is less than the target, move the left pointer one step to the right (to increase the sum).
+If the sum is greater than the target, move the right pointer one step to the left (to decrease the sum).
+
+```
+```java
+import java.util.Arrays;
+
+public class TwoSumTwoPointer {
+    public static int[] twoSum(int[] nums, int target) {
+        // Create a new array to store numbers and their original indices
+        int[][] numsWithIndices = new int[nums.length][2];
+
+        // Fill the new array with numbers and their original indices
+        for (int i = 0; i < nums.length; i++) {
+            numsWithIndices[i][0] = nums[i]; // Store the number
+            numsWithIndices[i][1] = i;      // Store its index
+        }
+
+        // Sort the array by the number values
+        Arrays.sort(numsWithIndices, (a, b) -> Integer.compare(a[0], b[0]));
+
+        // Initialize two pointers
+        int left = 0;
+        int right = nums.length - 1;
+
+        // Iterate with the two pointers
+        while (left < right) {
+            int sum = numsWithIndices[left][0] + numsWithIndices[right][0];
+
+            if (sum == target) {
+                // Return the original indices of the two numbers
+                return new int[]{numsWithIndices[left][1], numsWithIndices[right][1]};
+            } else if (sum < target) {
+                // Move the left pointer to the right
+                left++;
+            } else {
+                // Move the right pointer to the left
+                right--;
+            }
+        }
+
+        // If no solution is found, throw an exception
+        throw new IllegalArgumentException("No two sum solution");
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {2, 7, 11, 15};
+        int target = 9;
+
+        // Call the twoSum function and print the result
+        int[] result = twoSum(nums, target);
+        System.out.println("Indices: " + result[0] + ", " + result[1]);
+    }
+}
+
+```
 * 3 sum
 ```text
 Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
@@ -1341,7 +1493,7 @@ a, b, c, and d are distinct.
 nums[a] + nums[b] + nums[c] + nums[d] == target
 You may return the answer in any order.
 
-The naive approach is to run 4 loops with TC of O(n*n*n*)
+The naive approach is to run 4 loops with TC of O(n*n*n*n)
 
 ```
 ```java
@@ -1792,3 +1944,273 @@ The maximum product subarray for the input array [2, 3, -2, -4, 3, -6] is 144, w
 
 
 ```
+
+# Best Time to Buy and Sell Stock II
+
+## Problem Explanation
+You are allowed to perform as many transactions (buy/sell) as you want, provided you sell your stock before buying again. The goal is to maximize your profit.
+
+---
+
+## Brute Force Approach
+
+### Idea
+- Consider all possible buy/sell combinations, calculating the profit for each, and sum the profits for valid transactions.
+- This approach essentially checks all potential ways to trade stocks.
+
+### Implementation
+- Use nested loops:
+    - Outer loop for buying a stock.
+    - Inner loop for selling it on subsequent days.
+- Track all profitable transactions.
+
+### Time Complexity
+- **O(n^2)**: The outer loop iterates through all days, and the inner loop considers all subsequent days for selling.
+
+### Code Example (Java)
+```java
+public int maxProfitBruteForce(int[] prices) {
+    int n = prices.length;
+    int maxProfit = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (prices[j] > prices[i]) {
+                maxProfit += prices[j] - prices[i];
+            }
+        }
+    }
+    return maxProfit;
+}
+```
+
+### Drawback
+- Extremely inefficient for large input sizes due to the nested loops.
+
+---
+
+## Optimal Approach (Greedy Algorithm)
+
+### Idea
+- Focus on capturing **every upward movement in price** as profit.
+- Whenever the price increases from day \(i\) to day \(i+1\), add the difference \(prices[i+1] - prices[i]\) to the profit.
+
+### Key Insight
+- It doesn’t matter when you buy or sell as long as you capture all upward trends. This is because you can treat each upward movement as a separate transaction.
+
+### Algorithm
+- Initialize `maxProfit` to 0.
+- Iterate through the array:
+    - If \(prices[i+1] > prices[i]\), add the difference to `maxProfit`.
+- Return `maxProfit`.
+
+### Time Complexity
+- **O(n)**: Single pass through the array.
+
+### Code Example (Java)
+```java
+public int maxProfitOptimal(int[] prices) {
+    int maxProfit = 0;
+    for (int i = 1; i < prices.length; i++) {
+        if (prices[i] > prices[i - 1]) {
+            maxProfit += prices[i] - prices[i - 1];
+        }
+    }
+    return maxProfit;
+}
+```
+
+### Explanation
+- Example: \(prices = [7,1,5,3,6,4]\)
+    - \(1 \to 5\): Profit = \(5 - 1 = 4\)
+    - \(3 \to 6\): Profit = \(6 - 3 = 3\)
+    - Total Profit = \(4 + 3 = 7\).
+
+---
+
+## Comparison
+
+| Approach        | Time Complexity | Space Complexity | Suitability                                |
+|-----------------|-----------------|------------------|--------------------------------------------|
+| **Brute Force** | \(O(n^2)\)      | \(O(1)\)         | Not suitable for large input sizes.        |
+| **Optimal**     | \(O(n)\)        | \(O(1)\)         | Highly efficient, handles large inputs.    |
+
+---
+
+## Final Recommendation
+The optimal greedy algorithm is the best approach for solving this problem efficiently. It captures all opportunities for profit with minimal computation.
+
+
+
+# Celebrity Problem
+
+## Problem Description
+A **celebrity** is a person who is known to all but does not know anyone at a party. A party is being organized by some people. A square matrix `mat` (n x n) is used to represent people at the party such that if an element of row `i` and column `j` is set to `1`, it means the `i`th person knows the `j`th person. You need to return the index of the celebrity in the party, if the celebrity does not exist, return `-1`.
+
+### Notes:
+- Follow 0-based indexing.
+
+### Input:
+- A 2D matrix `mat[][]` of size `n x n` where `mat[i][j] == 1` means `i`th person knows `j`th person and `mat[i][j] == 0` means `i`th person does not know `j`th person.
+
+### Output:
+- The index of the celebrity, if exists, else `-1`.
+
+### Examples:
+1. **Input:**
+    ```java
+    mat = [[0, 1, 0], [0, 0, 0], [0, 1, 0]]
+    ```
+   **Output:**
+    ```java
+    1
+    ```
+   **Explanation:**
+   Person `1` is known by both person `0` and person `2`, and person `1` knows no one else. Therefore, person `1` is the celebrity.
+
+2. **Input:**
+    ```java
+    mat = [[0, 1], [1, 0]]
+    ```
+   **Output:**
+    ```java
+    -1
+    ```
+   **Explanation:**
+   Both people know each other, so there is no celebrity.
+
+3. **Input:**
+    ```java
+    mat = [[0]]
+    ```
+   **Output:**
+    ```java
+    0
+    ```
+   **Explanation:**
+   There's only one person, so they are the celebrity.
+
+---
+
+## Approach
+
+### Brute Force Approach
+In the brute force approach, we will check each person to see if they fulfill the criteria of being a celebrity:
+
+1. For each person `i`, we check:
+  - For all other people `j`, `mat[i][j] == 0` (person `i` knows no one).
+  - For all other people `j`, `mat[j][i] == 1` (everyone knows person `i`).
+
+2. If such a person exists, we return their index. If no one satisfies this, return `-1`.
+
+#### Time Complexity:
+- For each person, we check all the other people, resulting in `O(n^2)` comparisons.
+- **Time Complexity:** `O(n^2)`
+- **Space Complexity:** `O(1)` (constant space, since we only use a few variables)
+
+#### Code (Brute Force):
+```java
+public class Celebrity {
+    public int celebrity(int[][] mat) {
+        int n = mat.length;
+        
+        for (int i = 0; i < n; i++) {
+            boolean isCelebrity = true;
+            
+            // Check if person i knows anyone
+            for (int j = 0; j < n; j++) {
+                if (i != j && mat[i][j] == 1) {
+                    isCelebrity = false;
+                    break;
+                }
+            }
+            
+            // Check if everyone knows person i
+            if (isCelebrity) {
+                for (int j = 0; j < n; j++) {
+                    if (i != j && mat[j][i] == 0) {
+                        isCelebrity = false;
+                        break;
+                    }
+                }
+            }
+            
+            if (isCelebrity) {
+                return i;
+            }
+        }
+        
+        return -1; // No celebrity found
+    }
+}
+```
+
+---
+
+### Optimal Approach (O(n))
+
+In the optimal approach, we use a **two-pointer** strategy to eliminate non-celebrity candidates. The key observation is:
+
+1. If `mat[left][right] == 1`, it means `left` knows `right`, so `left` cannot be a celebrity.
+2. If `mat[left][right] == 0`, it means `left` does not know `right`, so `right` cannot be a celebrity.
+3. After narrowing down to a single candidate, we verify if they meet the celebrity conditions:
+  - They know no one (`mat[candidate][i] == 0` for all `i != candidate`).
+  - Everyone knows them (`mat[i][candidate] == 1` for all `i != candidate`).
+
+#### Time Complexity:
+- The first pass to find the candidate takes `O(n)`.
+- The second pass to verify the candidate takes `O(n)`.
+- **Time Complexity:** `O(n)`
+- **Space Complexity:** `O(1)` (constant space, no extra memory required)
+
+#### Code (Optimal):
+```java
+public class Celebrity {
+    public int celebrity(int[][] mat) {
+        int left = 0;
+        int right = mat.length - 1;
+
+        // Find the candidate for celebrity
+        while (left < right) {
+            if (mat[left][right] == 1) {
+                left++; // left knows right, so left cannot be the celebrity
+            } else {
+                right--; // left does not know right, so right cannot be the celebrity
+            }
+        }
+
+        int candidate = left;
+
+        // Verify if the candidate is a valid celebrity
+        for (int i = 0; i < mat.length; i++) {
+            if (i != candidate) {
+                // Check if candidate knows anyone (they shouldn't)
+                if (mat[candidate][i] == 1) {
+                    return -1;
+                }
+                // Check if everyone knows the candidate
+                if (mat[i][candidate] == 0) {
+                    return -1;
+                }
+            }
+        }
+
+        return candidate;  // Candidate is the celebrity
+    }
+}
+```
+
+---
+
+## Summary
+
+- **Brute Force Solution:**
+  - **Time Complexity:** `O(n^2)`
+  - **Space Complexity:** `O(1)`
+  - Suitable for smaller matrices.
+
+- **Optimal Solution:**
+  - **Time Complexity:** `O(n)`
+  - **Space Complexity:** `O(1)`
+  - Much faster for large matrices, optimal solution for this problem.
+
+---

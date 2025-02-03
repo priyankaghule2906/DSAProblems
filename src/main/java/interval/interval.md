@@ -191,3 +191,133 @@ public int eraseOverlapIntervals(int[][] intervals) {
         return count;
     }
 ```
+
+
+# 452. Minimum Number of Arrows to Burst Balloons
+
+## Problem Statement
+
+### Context
+You are presented with a wall representing the XY-plane, where balloons are taped with their horizontal diameters. Your mission is to burst all balloons using the minimum number of vertical arrows.
+
+### Key Constraints
+- Balloons are represented as `[xstart, xend]`
+- Arrows can be shot vertically from any x-coordinate
+- An arrow bursts a balloon if it passes through its horizontal range
+- No limit on the number of arrows
+
+## Problem Visualization
+
+### Balloon Representation
+```
+Wall (XY-Plane)
+
+x-axis:  1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16
+         |----|----|----|----|----|----|----|----|----|----|----|----|----|----|
+Balloon1:    [-------------------]
+Balloon2:          [-------------------]
+Balloon3:                [-------------------]
+```
+
+## Intuitive Approach
+
+### Core Strategy: Greedy Arrow Placement
+1. Sort balloons by their end points
+2. Place arrows at the earliest possible point
+3. Maximize the coverage of each arrow
+4. Minimize total number of arrows
+
+## Algorithm Walkthrough
+
+### Step-by-Step Process
+1. **Sort Balloons**: Order by end points (ascending)
+2. **Initialize First Arrow**:
+    - Place at the end of the first balloon
+    - This becomes our initial coverage point
+3. **Iterate Through Balloons**:
+    - If next balloon starts after current arrow, shoot a new arrow
+    - Update arrow position to the new balloon's end point
+
+## Mathematical Model
+
+### Formal Representation
+- Let `B = {b1, b2, ..., bn}` be the set of balloons
+- Let `A = {a1, a2, ..., ak}` be the set of arrows
+- Objective: Minimize `|A|`
+- Constraint: ∀b ∈ B, ∃a ∈ A such that a ∈ b
+
+## Java Implementation
+
+```java
+class Solution {
+    public int findMinArrowShots(int[][] points) {
+        // Handle edge cases
+        if (points == null || points.length == 0) return 0;
+        
+        // Sort balloons by end points
+        Arrays.sort(points, (a, b) -> Integer.compare(a[1], b[1]));
+        
+        int arrows = 1;  // Minimum one arrow
+        int arrowPos = points[0][1];  // First arrow at first balloon's end
+        
+        for (int i = 1; i < points.length; i++) {
+            // If current balloon starts after previous arrow, need new arrow
+            if (points[i][0] > arrowPos) {
+                arrows++;
+                arrowPos = points[i][1];
+            }
+        }
+        
+        return arrows;
+    }
+}
+```
+
+## Complexity Analysis
+
+### Time Complexity
+- Sorting: O(n log n)
+- Single Pass: O(n)
+- **Overall**: O(n log n)
+
+### Space Complexity
+- In-place sorting
+- Constant extra space
+- **Overall**: O(1)
+
+## Example Scenarios
+
+### Scenario 1: Overlapping Balloons
+**Input**: `[[10,16],[2,8],[1,6],[7,12]]`
+**Output**: 2 Arrows
+**Explanation**:
+- First Arrow (x=6): Bursts [1,6] and [2,8]
+- Second Arrow (x=11): Bursts [7,12] and [10,16]
+
+### Scenario 2: No Overlap
+**Input**: `[[1,2],[3,4],[5,6],[7,8]]`
+**Output**: 4 Arrows
+**Explanation**: Each balloon requires a separate arrow
+
+## Problem-Solving Strategies
+
+### Mental Models
+1. **Box Packing Analogy**
+    - Imagine arranging boxes with minimal separators
+    - Each separators covers maximum possible boxes
+
+2. **Resource Allocation**
+    - Arrows are limited resources
+    - Goal: Maximize coverage with minimum allocation
+
+## Common Pitfalls
+
+1. **Sorting Overlooked**
+    - Sorting is crucial for greedy approach
+    - Determines arrow placement efficiency
+
+2. **Boundary Condition Mistakes**
+    - Careful handling of start and end points
+    - Consider edge cases in implementation
+
+
