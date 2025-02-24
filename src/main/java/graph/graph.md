@@ -1171,3 +1171,323 @@ rooms = [[1,3], [3,0,1], [2], [0]]
 false
 ```
 
+# Reorder Routes to Make All Paths Lead to City Zero
+
+## Problem Statement
+There are `n` cities numbered from `0` to `n-1` and `n-1` roads such that there is only one way to travel between two different cities (forming a tree). The roads are **directed** and represented as `connections[i] = [a_i, b_i]`, meaning there is a road from `a_i` to `b_i`.
+
+The goal is to **reorient** some roads such that every city can reach city `0`. Return the minimum number of edges that need to be changed.
+
+### Constraints:
+- `2 <= n <= 5 * 10^4`
+- `connections.length == n - 1`
+- `0 <= a_i, b_i <= n - 1`
+- `a_i != b_i`
+
+---
+
+## Approach
+1. **Graph Representation:**
+    - Construct an **adjacency list** with **both directions** stored.
+      Store edges normally as (a, b) (directed edges).
+      Store reversed edges as (b, a), marking them separately.
+    - Mark the original directed edges to identify those needing reordering.
+
+2. **Use DFS/BFS:**
+    - Start from `city 0`.
+    - Count edges that point **away** from `0`, as they need to be reversed.
+
+---
+
+## DFS Solution
+Graph Construction:
+- Each edge is stored twice:
+    (a → b, 1) → Original directed edge
+    (b → a, 0) → Reverse edge to allow traversal
+- DFS Traversal:
+    Start from node 0.
+    Traverse all connected nodes.
+    If an edge is in the wrong direction (1), increase the counter.
+    Recursively visit all neighbors.
+```java
+import java.util.*;
+
+class Solution {
+    public int minReorder(int n, int[][] connections) {
+        List<List<int[]>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        for (int[] conn : connections) {
+            graph.get(conn[0]).add(new int[]{conn[1], 1}); // Original edge
+            graph.get(conn[1]).add(new int[]{conn[0], 0}); // Reverse edge
+        }
+
+        return dfs(0, -1, graph);
+    }
+
+    private int dfs(int node, int parent, List<List<int[]>> graph) {
+        int changes = 0;
+        for (int[] neighbor : graph.get(node)) {
+            int next = neighbor[0], direction = neighbor[1];
+            if (next == parent) continue;
+            changes += direction + dfs(next, node, graph);
+        }
+        return changes;
+    }
+}
+```
+
+### **Time Complexity:**
+- **Graph Construction:** `O(n)`
+- **DFS Traversal:** `O(n)`
+- **Overall Complexity:** `O(n)`
+
+---
+
+## BFS Solution
+```java
+import java.util.*;
+
+class Solution {
+    public int minReorder(int n, int[][] connections) {
+        List<List<int[]>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
+
+        for (int[] conn : connections) {
+            graph.get(conn[0]).add(new int[]{conn[1], 1});
+            graph.get(conn[1]).add(new int[]{conn[0], 0});
+        }
+
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] visited = new boolean[n];
+        queue.add(0);
+        visited[0] = true;
+        int changes = 0;
+
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            for (int[] neighbor : graph.get(node)) {
+                int next = neighbor[0], direction = neighbor[1];
+                if (visited[next]) continue;
+                visited[next] = true;
+                changes += direction;
+                queue.add(next);
+            }
+        }
+        return changes;
+    }
+}
+```
+
+### **Time Complexity:**
+- **Graph Construction:** `O(n)`
+- **BFS Traversal:** `O(n)`
+- **Overall Complexity:** `O(n)`
+
+---
+
+## **Dry Run of DFS with Diagram**
+
+### **Example Input:**
+```java
+n = 6
+connections = [[0,1], [1,3], [2,3], [4,0], [4,5]]
+```
+
+### **Initial Graph:**
+```
+    0 ← 1 → 3 ← 2
+    ↑
+    4 → 5
+```
+
+### **Adjacency List:**
+```
+0: [(1, 1), (4, 0)]
+1: [(0, 0), (3, 1)]
+2: [(3, 1)]
+3: [(1, 0), (2, 0)]
+4: [(0, 1), (5, 1)]
+5: [(4, 0)]
+```
+
+### **DFS Traversal Steps:**
+1. Start at `0`, visit `1` → Needs reversal (`+1` change).
+2. Visit `3` → Needs reversal (`+1` change).
+3. Visit `2` → Needs reversal (`+1` change).
+4. Visit `4` (no change) → Visit `5` (no change).
+
+### **Final Graph After Reordering:**
+```
+    0 → 1 ← 3 → 2
+    ↑
+    4 → 5
+```
+
+### **Final Output:**
+```java
+Output: 3
+```
+
+---
+
+### **Summary**
+| Approach | Space Complexity | Time Complexity | Pros | Cons |
+|-----------|----------------|----------------|------|------|
+| **DFS**   | `O(n)` (Recursion Stack) | `O(n)` | Simple, recursive | StackOverflow for deep trees |
+| **BFS**   | `O(n)` (Queue + Visited Array) | `O(n)` | Iterative, avoids recursion limit | Needs explicit queue |
+
+Let me know if you have any questions! 🚀
+
+# Evaluate Division
+
+## Problem Description
+You are given an array of variable pairs `equations` and an array of real numbers `values`, where:
+- `equations[i] = [Ai, Bi]` and `values[i]` represent the equation `Ai / Bi = values[i]`.
+- Each `Ai` or `Bi` is a string representing a variable.
+
+You are also given some queries, where `queries[j] = [Cj, Dj]` represents the `j`-th query to evaluate `Cj / Dj`.
+
+Return the answers to all queries. If a single answer cannot be determined, return `-1.0`.
+
+### Example 1
+**Input:**
+```plaintext
+equations = [["a","b"],["b","c"]]
+values = [2.0,3.0]
+queries = [["a","c"],["b","a"],["a","e"],["a","a"],["x","x"]]
+```
+
+**Output:**
+```plaintext
+[6.00000, 0.50000, -1.00000, 1.00000, -1.00000]
+```
+
+**Explanation:**
+- Given: `a / b = 2.0`, `b / c = 3.0`
+- Queries:
+    - `a / c = (a / b) * (b / c) = 2.0 * 3.0 = 6.0`
+    - `b / a = 1 / (a / b) = 1 / 2.0 = 0.5`
+    - `a / e` is unknown → `-1.0`
+    - `a / a = 1.0`
+    - `x / x` is unknown → `-1.0`
+
+## Approach
+
+### **1. Graph Representation**
+- Represent the equations as a **directed weighted graph**.
+- Each variable is a **node**, and each equation (`A / B = value`) represents a **directed edge** with weight `value`.
+- The **reverse edge** (`B / A = 1 / value`) is also added.
+
+### **2. Query Evaluation Using DFS**
+- For each query `(C / D)`, perform a **Depth-First Search (DFS)** from `C` to `D`.
+- Multiply the edge weights along the path to compute the result.
+- If no path exists, return `-1.0`.
+
+### **3. Optimization Considerations**
+- Use a **HashMap of HashMaps** (`Map<String, Map<String, Double>> graph`) for efficient lookups.
+- Use **DFS with a visited set** to avoid cycles.
+
+## Java Solution
+
+```java
+import java.util.*;
+
+class Solution {
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        Map<String, Map<String, Double>> graph = buildGraph(equations, values);
+        int n = queries.size();
+        double[] result = new double[n];
+
+        for (int i = 0; i < n; i++) {
+            List<String> query = queries.get(i);
+            String dividend = query.get(0);
+            String divisor = query.get(1);
+
+            if (!graph.containsKey(dividend) || !graph.containsKey(divisor)) {
+                result[i] = -1.0;
+            } else {
+                result[i] = dfs(dividend, divisor, graph, new HashSet<>(), 1.0);
+            }
+        }
+        return result;
+    }
+
+    double dfs(String start, String end, Map<String, Map<String, Double>> graph, Set<String> visited, double product) {
+        if (start.equals(end)) {
+            return product;
+        }
+        visited.add(start);
+
+        for (Map.Entry<String, Double> neighbor : graph.get(start).entrySet()) {
+            String next = neighbor.getKey();
+            if (!visited.contains(next)) {
+                double result = dfs(next, end, graph, visited, product * neighbor.getValue());
+                if (result != -1) { 
+                    return result;
+                }
+            }
+        }
+        return -1;
+    }
+
+    Map<String, Map<String, Double>> buildGraph(List<List<String>> equations, double[] values) {
+        Map<String, Map<String, Double>> graph = new HashMap<>();
+        for (int i = 0; i < values.length; i++) {
+            String src = equations.get(i).get(0);
+            String dest = equations.get(i).get(1);
+
+            graph.putIfAbsent(src, new HashMap<>());
+            graph.putIfAbsent(dest, new HashMap<>());
+
+            graph.get(src).put(dest, values[i]);
+            graph.get(dest).put(src, 1.0 / values[i]);
+        }
+        return graph;
+    }
+}
+```
+
+## Dry Run
+
+### **Example Input**
+```plaintext
+equations = [["x1","x2"],["x2","x3"],["x3","x4"],["x4","x5"]]
+values = [3.0,4.0,5.0,6.0]
+queries = [["x1","x5"],["x5","x2"],["x2","x4"],["x2","x2"],["x2","x9"],["x9","x9"]]
+```
+
+### **Graph Representation**
+```
+   x1 --(3.0)--> x2
+   x2 --(4.0)--> x3
+   x3 --(5.0)--> x4
+   x4 --(6.0)--> x5
+```
+
+### **Query Execution**
+| Query    | Computation | Output |
+|----------|------------|--------|
+| `x1 / x5` | `3.0 * 4.0 * 5.0 * 6.0 = 360.0` | `360.00000` |
+| `x5 / x2` | `1 / (3.0 * 4.0 * 5.0 * 6.0) = 0.00833` | `0.00833` |
+| `x2 / x4` | `4.0 * 5.0 = 20.0` | `20.00000` |
+| `x2 / x2` | `1.0` | `1.00000` |
+| `x2 / x9` | `x9` is unknown | `-1.00000` |
+| `x9 / x9` | `x9` is unknown | `-1.00000` |
+
+## Complexity Analysis
+
+- **Graph Construction:** `O(N)`, where `N` is the number of equations.
+- **DFS per Query:** `O(M)`, where `M` is the number of queries.
+- **Overall Complexity:** `O(N + M)`, since each query runs DFS in worst case `O(N)`, but `N` is small (≤ 20).
+
+## Summary
+✅ **Graph Representation** simplifies path-based calculations.
+✅ **DFS Traversal** efficiently finds connected components.
+✅ **HashMap Storage** ensures fast lookups.
+
+Would you like further optimizations using **Floyd-Warshall or Union-Find**? 🚀

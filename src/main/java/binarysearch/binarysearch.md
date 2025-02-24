@@ -35,7 +35,8 @@
 ```text
 in binary search why mid is calculated as low + (high-low) / 2 and not (low+ high) /2
 
-Because if we use mid = (low + high)/2 then it might lead to overflow, as (high + low) can exceed range and will eventually lead to overflow. But if we use mid = low + (high - low)/2, then the possibility of overflow becomes none, as if high and low are in the range, then (high - low) will definitely be in range and will not overflow.
+Because if we use mid = (low + high)/2 then it might lead to overflow, as (high + low) can exceed integer range and will eventually lead to overflow. 
+But if we use mid = low + (high - low)/2, then the possibility of overflow becomes none, as if high and low are in the range, then (high - low) will definitely be in range and will not overflow.
 
 In binary search, the mid value is calculated as low + (high - low) / 2 to avoid integer overflow. Integer overflow occurs when the sum of two values exceeds the maximum value that can be represented by the data type. For example, if low is 2,147,483,647 and high is 1, then low + high = 2,147,483,648, which is greater than the maximum value for a 32-bit integer.
 The formula low + (high - low) / 2 avoids integer overflow by subtracting low from high before dividing by 2. This ensures that the result is always less than or equal to high, regardless of the value of low.
@@ -661,3 +662,127 @@ Optimal solution is using binary search O(log n)
 *  Find Median in row wise sorted array
 *  Search in row wise and column wise sorted array
 *  Matrix Median
+
+
+# 2300. Successful Pairs of Spells and Potions
+
+## **Problem Statement**
+You are given two positive integer arrays `spells` and `potions`, of length `n` and `m` respectively, where `spells[i]` represents the strength of the `i-th` spell and `potions[j]` represents the strength of the `j-th` potion.
+
+You are also given an integer `success`. A spell and potion pair is considered **successful** if the product of their strengths is at least `success`.
+
+Return an integer array `pairs` of length `n` where `pairs[i]` is the number of potions that will form a successful pair with the `i-th` spell.
+
+### **Example 1**
+```java
+Input: spells = [5,1,3], potions = [1,2,3,4,5], success = 7
+Output: [4,0,3]
+```
+
+### **Example 2**
+```java
+Input: spells = [3,1,2], potions = [8,5,8], success = 16
+Output: [2,0,2]
+```
+
+---
+
+## **Approach**
+### **Step 1: Sort the Potions**
+- Sorting the `potions` array helps us efficiently count successful pairs using binary search.
+
+### **Step 2: Iterate Through Each Spell**
+- For each `spell`, determine the **minimum potion strength** required to meet `success`:
+
+  \[ \text{minPotion} = \left\lceil \frac{success}{spell} \right\rceil \]
+
+- Use **binary search** to find the first potion that meets this condition.
+
+### **Step 3: Use Binary Search**
+- The binary search finds the **first valid potion** where `potions[mid] >= minPotion`.
+- The count of successful pairs is `m - index` (remaining elements in the sorted potions array).
+
+---
+
+## **Java Implementation**
+```java
+import java.util.*;
+
+class Solution {
+    public int[] successfulPairs(int[] spells, int[] potions, long success) {
+        int n = spells.length;
+        int m = potions.length;
+        Arrays.sort(potions);  // Sorting potions for binary search
+        int[] result = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            int spell = spells[i];
+            int minPotion = (int) Math.ceil((double) success / spell); // Corrected division
+            int index = binarySearch(potions, minPotion);
+            result[i] = m - index; // Count of successful pairs
+        }
+        return result;
+    }
+
+    private int binarySearch(int[] potions, int min) {
+        int low = 0, high = potions.length - 1;
+        
+        while (low <= high) { // Corrected condition to ensure we check all elements
+            int mid = low + (high - low) / 2;
+            if (potions[mid] >= min) {
+                high = mid - 1; // Move left to find the first valid potion
+            } else {
+                low = mid + 1; // Move right
+            }
+        }
+        return low; // First index where potions[index] >= min
+    }
+
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        int[] spells = {5, 1, 3};
+        int[] potions = {1, 2, 3, 4, 5};
+        int success = 7;
+        System.out.println(Arrays.toString(sol.successfulPairs(spells, potions, success)));  // Output: [4, 0, 3]
+    }
+}
+```
+
+---
+
+## **Time Complexity Analysis**
+- **Sorting potions:** `O(m log m)`
+- **Binary search for each spell:** `O(log m)`
+- **Total Complexity:** `O(m log m + n log m)`, which is efficient.
+
+---
+
+## **Dry Run**
+### **Given Input**
+```java
+spells = [5, 1, 3];
+potions = [1, 2, 3, 4, 5];
+success = 7;
+```
+
+### **Step-by-Step Calculation of `minPotion` and Binary Search**
+
+| Spell | Min Potion (`ceil(success / spell)`) | Binary Search Index | Successful Pairs |
+|-------|------------------------------------|---------------------|------------------|
+| 5     | `ceil(7 / 5) = 2`                 | 1                   | 4                |
+| 1     | `ceil(7 / 1) = 7`                 | 5 (out of bounds)   | 0                |
+| 3     | `ceil(7 / 3) = 3`                 | 2                   | 3                |
+
+### **Final Output**
+```java
+[4, 0, 3]
+```
+
+---
+
+## **Key Takeaways**
+1. **Sorting + Binary Search** makes the solution efficient.
+2. **Using `Math.ceil((double) success / spell)`** ensures correctness.
+3. **Binary Search helps find the first valid potion** in `O(log m)` time.
+
+    

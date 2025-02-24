@@ -1,3 +1,150 @@
+# Trie Data Structure
+
+## Problem Statement
+A **Trie** (pronounced as "try") or **prefix tree** is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.
+
+Implement the `Trie` class:
+- `Trie()` Initializes the trie object.
+- `void insert(String word)` Inserts the string `word` into the trie.
+- `boolean search(String word)` Returns `true` if the string `word` is in the trie (i.e., was inserted before), and `false` otherwise.
+- `boolean startsWith(String prefix)` Returns `true` if there is a previously inserted string `word` that has the prefix `prefix`, and `false` otherwise.
+
+### Example:
+```java
+Trie trie = new Trie();
+trie.insert("apple");
+trie.search("apple");   // return True
+trie.search("app");     // return False
+trie.startsWith("app"); // return True
+trie.insert("app");
+trie.search("app");     // return True
+```
+
+## Intuition
+A **Trie** is useful for storing words and efficiently performing operations like:
+- **Insert a word** by creating nodes for each character if they do not already exist.
+- **Search for a word** by checking if all characters exist in sequence and if the last character is marked as the end of a word.
+- **Check prefix existence** by ensuring that the sequence of characters exists in the Trie.
+
+## Java Implementation
+```java
+class Trie {
+    private TrieNode root;
+
+    private class TrieNode {
+        TrieNode[] children;
+        boolean isEndOfWord;
+
+        TrieNode() {
+            children = new TrieNode[26]; // For lowercase English letters
+            isEndOfWord = false;
+        }
+    }
+
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    public void insert(String word) {
+        TrieNode node = root;
+        for (char ch : word.toCharArray()) {
+            int index = ch - 'a';
+            if (node.children[index] == null) {
+                node.children[index] = new TrieNode();
+            }
+            node = node.children[index];
+        }
+        node.isEndOfWord = true;
+    }
+
+    public boolean search(String word) {
+        TrieNode node = findNode(word);
+        return node != null && node.isEndOfWord;
+    }
+
+    public boolean startsWith(String prefix) {
+        return findNode(prefix) != null;
+    }
+
+    private TrieNode findNode(String word) {
+        TrieNode node = root;
+        for (char ch : word.toCharArray()) {
+            int index = ch - 'a';
+            if (node.children[index] == null) {
+                return null;
+            }
+            node = node.children[index];
+        }
+        return node;
+    }
+}
+```
+
+## Complexity Analysis
+| Operation   | Time Complexity | Explanation |
+|-------------|---------------|-------------|
+| **Insert**  | O(N) | Traverse N characters and insert nodes if needed |
+| **Search**  | O(N) | Traverse N characters, check if word ends |
+| **Prefix**  | O(N) | Traverse N characters to check prefix |
+
+**Space Complexity:** O(M * N), where:
+- **M** is the number of words.
+- **N** is the average length of a word.
+
+## Dry Run Example
+### Insert "apple"
+```
+(root)
+  |
+  a
+  |
+  p
+  |
+  p
+  |
+  l
+  |
+  e (endOfWord=true)
+```
+
+### Search "apple"
+- Traverse: `a → p → p → l → e`
+- `e` is marked as `endOfWord` → **Return `true`**
+
+### Search "app"
+- Traverse: `a → p → p`
+- `p` is **not** marked as `endOfWord` → **Return `false`**
+
+### startsWith("app")
+- Traverse: `a → p → p`
+- Path exists → **Return `true`**
+
+### Insert "app"
+```
+(root)
+  |
+  a
+  |
+  p
+  |
+  p (endOfWord=true)
+  |
+  l
+  |
+  e (endOfWord=true)
+```
+
+### Search "app"
+- Traverse: `a → p → p`
+- `p` is marked as `endOfWord` → **Return `true`**
+
+## Conclusion
+- **Tries enable fast insertion and retrieval.**
+- **Operations run in O(N) time, making them efficient for prefix-based operations.**
+- **Common applications include autocomplete, spell checking, and dictionary lookups.**
+
+
+
 # Search Suggestions System
 
 ## Problem Statement
