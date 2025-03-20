@@ -1180,3 +1180,1027 @@ Let's walk through the example from the problem statement:
     - Provides efficient floorKey() operation
     - Balanced binary search tree implementation ensures logarithmic time complexity
 
+
+
+Linked List
+# Merge Two Sorted Lists
+
+## Problem Statement
+You are given the heads of two sorted linked lists `list1` and `list2`.
+
+Merge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.
+
+Return the head of the merged linked list.
+
+### **Example 1**
+**Input:**  
+`list1 = [1,2,4]`  
+`list2 = [1,3,4]`  
+**Output:** `[1,1,2,3,4,4]`
+
+### **Example 2**
+**Input:**  
+`list1 = []`  
+`list2 = []`  
+**Output:** `[]`
+
+### **Example 3**
+**Input:**  
+`list1 = []`  
+`list2 = [0]`  
+**Output:** `[0]`
+
+### **Constraints**
+- The number of nodes in both lists is in the range `[0, 50]`.
+- `-100 <= Node.val <= 100`
+- Both `list1` and `list2` are sorted in non-decreasing order.
+
+---
+
+## **Logic**
+We use a **Two Pointer approach** to merge the two sorted lists efficiently.
+1. Create a dummy node (`dummy`) and a pointer (`current`) to track the merged list.
+2. Traverse both lists using two pointers, `list1` and `list2`.
+3. Compare values:
+   - If `list1.val < list2.val`, attach `list1` to `current` and move `list1` forward.
+   - Otherwise, attach `list2` to `current` and move `list2` forward.
+4. After the loop, attach the remaining nodes from `list1` or `list2`.
+5. Return `dummy.next` (skipping the dummy node).
+
+---
+
+## **Java Code**
+### **Iterative Approach (Two Pointers)**
+```java
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int val) { this.val = val; }
+}
+
+public class MergeTwoSortedLists {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode dummy = new ListNode(-1); // Dummy node to simplify logic
+        ListNode current = dummy;
+
+        while (list1 != null && list2 != null) {
+            if (list1.val < list2.val) {
+                current.next = list1;
+                list1 = list1.next;
+            } else {
+                current.next = list2;
+                list2 = list2.next;
+            }
+            current = current.next;
+        }
+
+        // Attach remaining nodes
+        if (list1 != null) current.next = list1;
+        if (list2 != null) current.next = list2;
+
+        return dummy.next;
+    }
+}
+```
+
+### **Complexity Analysis**
+- **Time Complexity:** `O(N)`, where `N` is the total number of nodes in both lists.
+- **Space Complexity:** `O(1)`, as we modify the lists in place.
+
+---
+
+## **Dry Run**
+### **Example Input**
+`list1 = [1,2,4]`, `list2 = [1,3,4]`
+
+### **Step-by-Step Execution**
+| `list1` | `list2` | `current` (Merged List) |
+|---------|---------|------------------|
+| `1 → 2 → 4` | `1 → 3 → 4` | `dummy →` |
+| `2 → 4` | `1 → 3 → 4` | `dummy → 1 →` |
+| `2 → 4` | `3 → 4` | `dummy → 1 → 1 →` |
+| `4` | `3 → 4` | `dummy → 1 → 1 → 2 →` |
+| `4` | `4` | `dummy → 1 → 1 → 2 → 3 →` |
+| `null` | `4` | `dummy → 1 → 1 → 2 → 3 → 4 →` |
+| `null` | `null` | `dummy → 1 → 1 → 2 → 3 → 4 → 4` |
+
+### **Final Output:** `[1,1,2,3,4,4]` ✅
+
+---
+
+### **Alternative Approach: Recursion**
+```java
+public class MergeTwoSortedListsRecursive {
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        if (list1 == null) return list2;
+        if (list2 == null) return list1;
+
+        if (list1.val < list2.val) {
+            list1.next = mergeTwoLists(list1.next, list2);
+            return list1;
+        } else {
+            list2.next = mergeTwoLists(list1, list2.next);
+            return list2;
+        }
+    }
+}
+```
+
+### **Complexity Analysis (Recursive Approach)**
+- **Time Complexity:** `O(N)`, where `N` is the total number of nodes.
+- **Space Complexity:** `O(N)`, due to recursive function calls.
+
+---
+
+
+1. Linked List Cycle (leetcode 141)
+```text
+Given head, the head of a linked list, determine if the linked list has a cycle in it.
+There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer is connected to. Note that pos is not passed as a parameter.
+Return true if there is a cycle in the linked list. Otherwise, return false.
+```
+
+```text
+Brute Force approach is to use use an extra ds like list or set to check if the visited node is already present in the list, if yes its a cycle
+TC O(N)
+SC O(N)  
+```
+![brute-detect-cycle.png](..%2F..%2F..%2F..%2F.gitbook%2Fassets%2Fbrute-detect-cycle.png)
+
+```java
+public boolean hasCycle1(ListNode head) {
+        List<ListNode> list = new ArrayList<>();
+        if(head==null)
+            return false;
+
+        ListNode temp = head;
+        while(temp!=null){
+            if(list.contains(temp)){
+                return true;
+            }
+            list.add(temp);
+            temp = temp.next;
+        }
+        return false;
+    }
+```
+
+```text
+Optimal approach is to use Floyd Warshals Algo of fast and slow pointer
+if fast and slow pointer meets at some point then there is a cycle
+TC: O(n), where n is the number of nodes in the Linked List.
+SC: O(1). 
+```
+
+![tortoise-hare.png](..%2F..%2F..%2F..%2F.gitbook%2Fassets%2Ftortoise-hare.png)
+
+
+```java
+ public boolean hasCycle(ListNode head) {
+        if(head == null)
+            return false;
+        ListNode tortoise = head;
+        ListNode hare = head;
+        while(tortoise!=null && hare!=null && hare.next!=null ){
+            tortoise = tortoise.next;
+            hare = hare.next.next;
+            if(tortoise == hare ) return true;
+        }
+        return false;
+    }
+```
+
+# Valid Sudoku
+
+## Problem Statement
+Determine if a **9 x 9** Sudoku board is **valid**. Only the **filled cells** need to be validated according to the following rules:
+
+1. Each **row** must contain the digits **1-9** without repetition.
+2. Each **column** must contain the digits **1-9** without repetition.
+3. Each of the nine **3×3 sub-boxes** of the grid must contain the digits **1-9** without repetition.
+
+**Notes:**
+- A Sudoku board (partially filled) **could be valid** but is not necessarily solvable.
+- Only the **filled cells** need to be validated according to the rules.
+
+### Example 1
+#### **Input:**
+```plaintext
+board =
+[['5','3','.','.','7','.','.','.','.']
+,['6','.','.','1','9','5','.','.','.']
+,['.','9','8','.','.','.','.','6','.']
+,['8','.','.','.','6','.','.','.','3']
+,['4','.','.','8','.','3','.','.','1']
+,['7','.','.','.','2','.','.','.','6']
+,['.','6','.','.','.','.','2','8','.']
+,['.','.','.','4','1','9','.','.','5']
+,['.','.','.','.','8','.','.','7','9']]
+```
+#### **Output:**
+```plaintext
+true
+```
+
+### Example 2
+#### **Input:**
+```plaintext
+board =
+[['8','3','.','.','7','.','.','.','.']
+,['6','.','.','1','9','5','.','.','.']
+,['.','9','8','.','.','.','.','6','.']
+,['8','.','.','.','6','.','.','.','3']
+,['4','.','.','8','.','3','.','.','1']
+,['7','.','.','.','2','.','.','.','6']
+,['.','6','.','.','.','.','2','8','.']
+,['.','.','.','4','1','9','.','.','5']
+,['.','.','.','.','8','.','.','7','9']]
+```
+#### **Output:**
+```plaintext
+false
+```
+#### **Explanation:**
+- The number **'8'** appears **twice** in the **top-left 3×3 sub-box**, making the board invalid.
+
+---
+
+## Intuition
+To efficiently check the Sudoku board, we need to validate three conditions **simultaneously**:
+1. Each row should contain unique numbers.
+2. Each column should contain unique numbers.
+3. Each **3×3 box** should contain unique numbers.
+
+### **Tracking Mechanism**
+We use a **HashSet** to track numbers seen in:
+- Each **row**
+- Each **column**
+- Each **3×3 sub-box** (indexed using `(i / 3) + "-" + (j / 3)`).
+
+If any number is **repeated**, the board is **invalid**.
+
+---
+
+## Java Implementation
+```java
+import java.util.HashSet;
+
+public class ValidSudoku {
+    public static boolean isValidSudoku(char[][] board) {
+        HashSet<String> seen = new HashSet<>();
+        
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                char num = board[i][j];
+                if (num != '.') {
+                    if (!seen.add(num + " in row " + i) ||
+                        !seen.add(num + " in col " + j) ||
+                        !seen.add(num + " in box " + (i / 3) + "-" + (j / 3))) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        char[][] board1 = {
+            {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+            {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+            {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+            {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+            {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+            {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+            {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+            {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+            {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+        };
+        
+        char[][] board2 = {
+            {'8', '3', '.', '.', '7', '.', '.', '.', '.'},
+            {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+            {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+            {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+            {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+            {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+            {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+            {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+            {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+        };
+        
+        System.out.println(isValidSudoku(board1)); // Output: true
+        System.out.println(isValidSudoku(board2)); // Output: false
+    }
+}
+```
+Understanding (i / 3) + "-" + (j / 3)
+Each 3×3 sub-box in a Sudoku board can be identified using integer division:
+Row Index (i / 3): Determines which group of 3 rows the cell belongs to.
+Column Index (j / 3): Determines which group of 3 columns the cell belongs to.
+Together, (i / 3) + "-" + (j / 3) creates a unique identifier for each of the nine 3×3 sub-boxes.
+---
+
+j →  0       1     2   |   3      4    5   |   6      7     8  
+i  -----------------------------------------------------------
+0  | (0,0) (0,0) (0,0) | (0,1) (0,1) (0,1) | (0,2) (0,2) (0,2)
+1  | (0,0) (0,0) (0,0) | (0,1) (0,1) (0,1) | (0,2) (0,2) (0,2)
+2  | (0,0) (0,0) (0,0) | (0,1) (0,1) (0,1) | (0,2) (0,2) (0,2)
+   -----------------------------------------------------------
+3  | (1,0) (1,0) (1,0) | (1,1) (1,1) (1,1) | (1,2) (1,2) (1,2)
+4  | (1,0) (1,0) (1,0) | (1,1) (1,1) (1,1) | (1,2) (1,2) (1,2)
+5  | (1,0) (1,0) (1,0) | (1,1) (1,1) (1,1) | (1,2) (1,2) (1,2)
+   -----------------------------------------------------------
+6  | (2,0) (2,0) (2,0) | (2,1) (2,1) (2,1) | (2,2) (2,2) (2,2)
+7  | (2,0) (2,0) (2,0) | (2,1) (2,1) (2,1) | (2,2) (2,2) (2,2)
+8  | (2,0) (2,0) (2,0) | (2,1) (2,1) (2,1) | (2,2) (2,2) (2,2)
+
+
+## Dry Run Example
+
+| i | j | num  | Row Check | Column Check | Box Check | Result |
+|---|---|------|-----------|--------------|-----------|--------|
+| 0 | 0 | '5'  | ✅ Unique  | ✅ Unique     | ✅ Unique  | ✅      |
+| 0 | 1 | '3'  | ✅ Unique  | ✅ Unique     | ✅ Unique  | ✅      |
+| 1 | 0 | '6'  | ✅ Unique  | ✅ Unique     | ✅ Unique  | ✅      |
+| 4 | 4 | '8'  | ✅ Unique  | ✅ Unique     | ✅ Unique  | ✅      |
+| 8 | 8 | '9'  | ✅ Unique  | ✅ Unique     | ✅ Unique  | ✅      |
+| 0 | 0 | '8' (duplicate) | ❌ Not Unique | ✅ Unique | ❌ Not Unique | ❌ Invalid |
+
+---
+
+## Complexity Analysis
+| Operation | Time Complexity | Space Complexity |
+|-----------|----------------|------------------|
+| Checking Rows | **O(1)** | **O(1)** |
+| Checking Columns | **O(1)** | **O(1)** |
+| Checking Boxes | **O(1)** | **O(1)** |
+| **Overall Complexity** | **O(1)** | **O(1)** |
+
+### **Why O(1)?**
+- The board size is always **9×9** (**fixed size**), meaning the algorithm runs in **constant time and space**.
+
+---
+### 🚀 This solution efficiently checks **rows, columns, and 3×3 sub-boxes** using **one pass** with a **HashSet**.
+
+# Longest Consecutive Sequence
+**Medium**
+
+**Given an array of integers **`nums`, return *the length* of the longest consecutive sequence of elements that can be formed.
+
+**A *consecutive sequence* is a sequence of elements in which each element is exactly **`1` greater than the previous element. The elements do *not* have to be consecutive in the original array.
+
+**You must write an algorithm that runs in **`O(n)` time.
+
+**Example 1:**
+
+```java
+Input: nums = [2,20,4,10,3,4,5]
+
+Output: 4
+```
+
+**Explanation: The longest consecutive sequence is **`[2, 3, 4, 5]`.
+
+**Example 2:**
+
+```java
+Input: nums = [0,3,2,5,4,6,1,1]
+
+Output: 7
+```
+
+**Constraints:**
+* `0 <= nums.length <= 1000`
+* `-10^9 <= nums[i] <= 10^9`
+
+## Intuition
+
+The key insight is that we need to find the longest chain of consecutive numbers, but these numbers don't need to be consecutive in the original array. Since we need an O(n) solution, sorting (which would be O(n log n)) isn't optimal.
+
+Instead, we can use a HashSet to quickly check if a number exists. Then for each number, we can check if it's the start of a sequence by verifying if its predecessor exists in the set. If not, we can count how many consecutive numbers follow it.
+
+## Java Approach
+
+```java
+public class Solution {
+    public int longestConsecutive(int[] nums) {
+        // Handle empty array case
+        if (nums.length == 0) {
+            return 0;
+        }
+        
+        // Add all numbers to a HashSet for O(1) lookups
+        Set<Integer> numSet = new HashSet<>();
+        for (int num : nums) {
+            numSet.add(num);
+        }
+        
+        int longestStreak = 0;
+        
+        // Iterate through each number in the array
+        for (int num : numSet) {
+            // Only check for sequences starting with numbers that have no predecessor
+            // This ensures O(n) time complexity
+            if (!numSet.contains(num - 1)) {
+                int currentNum = num;
+                int currentStreak = 1;
+                
+                // Count consecutive numbers
+                while (numSet.contains(currentNum + 1)) {
+                    currentNum++;
+                    currentStreak++;
+                }
+                
+                // Update longest streak if current is longer
+                longestStreak = Math.max(longestStreak, currentStreak);
+            }
+        }
+        
+        return longestStreak;
+    }
+}
+```
+
+## Dry Run
+
+Let's walk through Example 1: `nums = [2,20,4,10,3,4,5]`
+
+1. We add all numbers to a HashSet: {2, 20, 4, 10, 3, 5}
+2. We iterate through each number in the set:
+   - 2: No predecessor (1 not in set), so we count: [2, 3, 4, 5] = 4
+   - 20: No predecessor (19 not in set), so we count: [20] = 1
+   - 4: Has predecessor (3 in set), skip
+   - 10: No predecessor (9 not in set), so we count: [10] = 1
+   - 3: Has predecessor (2 in set), skip
+   - 5: Has predecessor (4 in set), skip
+3. The longest sequence is 4 (from checking the sequence starting with 2)
+
+For Example 2: `nums = [0,3,2,5,4,6,1,1]`
+We would find a consecutive sequence of [0, 1, 2, 3, 4, 5, 6] with length 7.
+
+## Time & Space Complexity
+
+- **Time Complexity**: O(n)
+   - Adding all numbers to the HashSet is O(n)
+   - For each number, we only perform the sequence counting if it's the start of a sequence
+   - Each number is only visited once when counting consecutive numbers
+   - In the worst case, we might visit each number twice (once during HashSet iteration and once during consecutive counting)
+
+- **Space Complexity**: O(n)
+   - We store all numbers in a HashSet, which in the worst case takes O(n) space
+
+The key optimization is checking if a number is the start of a sequence by confirming its predecessor doesn't exist, which ensures we don't redundantly count sequences and keeps the time complexity at O(n).
+
+# Valid Palindrome
+
+## Intuition
+A palindrome is a sequence of characters that reads the same forward and backward. However, in this problem, we need to consider only alphanumeric characters and ignore case sensitivity. The best way to approach this problem efficiently is by using the **two-pointer technique**, which allows us to check characters from both ends and move inward until we determine whether the string is a palindrome.
+
+## Java Logic
+To solve this problem in Java, we:
+1. Use two pointers: `left` starting from the beginning and `right` starting from the end.
+2. Ignore non-alphanumeric characters using `Character.isLetterOrDigit()`.
+3. Convert characters to lowercase using `Character.toLowerCase()` for case insensitivity.
+4. Compare the characters at the `left` and `right` pointers.
+5. If a mismatch is found, return `false`.
+6. If all valid characters match, return `true`.
+
+### Java Code Implementation
+```java
+class Solution {
+    public boolean isPalindrome(String s) {
+        int left = 0;
+        int right = s.length() - 1;
+
+        while (left < right) {
+            char l = s.charAt(left);
+            char r = s.charAt(right);
+
+            if (!Character.isLetterOrDigit(l)) {
+                left++;
+            } else if (!Character.isLetterOrDigit(r)) {
+                right--;
+            } else if (Character.toLowerCase(l) != Character.toLowerCase(r)) {
+                return false;
+            } else {
+                left++;
+                right--;
+            }
+        }
+        return true;
+    }
+}
+```
+
+## Dry Run
+### Example 1:
+#### Input: `s = "Was it a car or a cat I saw?"`
+#### Processing:
+1. Convert to alphanumeric only: "wasitacaroracatisaw"
+2. `left = 0, right = 18` → 'w' == 'w' ✅ (move inwards)
+3. `left = 1, right = 17` → 'a' == 'a' ✅
+4. `left = 2, right = 16` → 's' == 's' ✅
+5. Continue until `left >= right`.
+#### Output: `true`
+
+### Example 2:
+#### Input: `s = "tab a cat"`
+#### Processing:
+1. Convert to alphanumeric only: "tabacat"
+2. `left = 0, right = 6` → 't' == 't' ✅
+3. `left = 1, right = 5` → 'a' == 'a' ✅
+4. `left = 2, right = 4` → 'b' != 'c' ❌
+#### Output: `false`
+
+## Complexity Analysis
+- **Time Complexity:** O(N) → We iterate through the string once, processing each character at most twice (once for checking and once for comparison).
+- **Space Complexity:** O(1) → No extra space is used apart from a few variables.
+
+This approach ensures an efficient solution for checking valid palindromes even for large input sizes.
+
+# Three Sum Problem
+
+## Problem Statement
+Given an integer array `nums`, return all the triplets `[nums[i], nums[j], nums[k]]` where:
+- `nums[i] + nums[j] + nums[k] == 0`
+- `i, j, and k` are distinct indices.
+- The output should not contain any duplicate triplets.
+
+The triplets can be returned in any order.
+
+### Examples
+#### Example 1:
+**Input:** `nums = [-1,0,1,2,-1,-4]`
+
+**Output:** `[[-1,-1,2],[-1,0,1]]`
+
+**Explanation:**
+- `nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0`
+- `nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0`
+- `nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0`
+- The distinct triplets are `[-1,-1,2]` and `[-1,0,1]`
+
+#### Example 2:
+**Input:** `nums = [0,1,1]`
+
+**Output:** `[]`
+
+**Explanation:** The only possible triplet does not sum up to 0.
+
+#### Example 3:
+**Input:** `nums = [0,0,0]`
+
+**Output:** `[[0,0,0]]`
+
+**Explanation:** The only possible triplet sums up to 0.
+
+### Constraints
+- `3 <= nums.length <= 1000`
+- `-10^5 <= nums[i] <= 10^5`
+
+---
+
+## Approach
+### Brute Force (O(n^3))
+- Use three nested loops to find all triplets `(i, j, k)`.
+- Check if `nums[i] + nums[j] + nums[k] == 0`.
+- Store unique triplets in a set to avoid duplicates.
+
+### Optimized Approach (Two Pointers, O(n^2))
+1. **Sort the array** to simplify duplicate handling.
+2. **Fix one element** and use two pointers to find pairs that sum up to the negative of the fixed element.
+3. **Use two-pointer technique** to move left and right pointers based on the sum.
+4. **Avoid duplicates** by skipping duplicate elements.
+
+---
+
+## Java Solution
+```java
+import java.util.*;
+
+public class ThreeSum {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums); // Step 1: Sort the array
+        List<List<Integer>> result = new ArrayList<>();
+
+        for (int i = 0; i < nums.length - 2; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue; // Skip duplicates
+            
+            int left = i + 1, right = nums.length - 1;
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                
+                if (sum == 0) {
+                    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    left++;
+                    right--;
+                    while (left < right && nums[left] == nums[left - 1]) left++; // Skip duplicates
+                    while (left < right && nums[right] == nums[right + 1]) right--; // Skip duplicates
+                } else if (sum < 0) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        return result;
+    }
+}
+```
+
+---
+
+## Dry Run
+### Input: `nums = [-1, 0, 1, 2, -1, -4]`
+#### Sorted: `[-4, -1, -1, 0, 1, 2]`
+
+| i  | left | right | nums[i] | nums[left] | nums[right] | sum  | Action       |
+|----|------|-------|---------|------------|-------------|------|-------------|
+| 0  | 1    | 5     | -4      | -1         | 2           | -3   | left++       |
+| 0  | 2    | 5     | -4      | -1         | 2           | -3   | left++       |
+| 0  | 3    | 5     | -4      | 0          | 2           | -2   | left++       |
+| ...| ...  | ...   | ...     | ...        | ...         | ...  | ...         |
+| 1  | 2    | 5     | -1      | -1         | 2           | 0    | Add triplet  |
+| 1  | 3    | 4     | -1      | 0          | 1           | 0    | Add triplet  |
+
+Final result: `[[-1,-1,2],[-1,0,1]]`
+
+---
+
+## Time & Space Complexity
+- **Sorting the array**: `O(n log n)`
+- **Two-pointer traversal for each element**: `O(n^2)`
+- **Overall Complexity**: `O(n^2)`
+- **Space Complexity**: `O(1)`, ignoring the output list.
+
+---
+
+## Summary
+- **Brute Force:** `O(n^3)`, generates all triplets, slow.
+- **Optimized (Two Pointers):** `O(n^2)`, uses sorting and two-pointer technique.
+- **Edge Cases:** Handles duplicates efficiently, considers arrays with all zeroes.
+
+This approach provides an efficient way to solve the problem while maintaining uniqueness in results.
+
+# Container With Most Water
+
+## Problem Statement
+You are given an integer array `heights` of length `n` where each element represents the height of a vertical line drawn at that index. The width between two indices is `1`. Find two lines that together with the x-axis form a container, such that the container holds the most water.
+
+Return the **maximum amount of water** a container can store.
+
+**Example:**
+
+```
+Input: heights = [1,8,6,2,5,4,8,3,7]
+Output: 49
+Explanation: The container formed by heights[1] (8) and heights[8] (7) gives max area (7 * 7 = 49).
+```
+
+## Intuition
+- The key idea is that **the area is determined by the smaller of the two heights and the distance between them**.
+- If we fix two pointers at the leftmost and rightmost ends, the **width is maximized initially**.
+- Since **reducing width decreases area**, we must always move the pointer pointing to the **shorter line** to maximize the height, potentially increasing the area.
+- We use a **two-pointer approach** to check all possible containers efficiently.
+
+## Java Logic
+```java
+class Solution {
+    public int maxArea(int[] heights) {
+        int maxArea = 0; // Area cannot be negative
+        int left = 0;
+        int right = heights.length - 1;
+
+        while (left < right) {
+            int area = Math.min(heights[left], heights[right]) * (right - left);
+            maxArea = Math.max(maxArea, area);
+
+            if (heights[left] <= heights[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return maxArea;
+    }
+}
+```
+
+## Dry Run
+### Input: `heights = [1,8,6,2,5,4,8,3,7]`
+
+| Left | Right | heights[left] | heights[right] | Area | MaxArea |
+|------|-------|--------------|---------------|------|---------|
+| 0    | 8     | 1            | 7             | 8    | 8       |
+| 1    | 8     | 8            | 7             | 49   | 49      |
+| 1    | 7     | 8            | 3             | 18   | 49      |
+| 1    | 6     | 8            | 8             | 40   | 49      |
+| 2    | 6     | 6            | 8             | 24   | 49      |
+| 3    | 6     | 2            | 8             | 6    | 49      |
+| 4    | 6     | 5            | 8             | 10   | 49      |
+| 5    | 6     | 4            | 8             | 4    | 49      |
+| 6    | 6     | 8            | 8             | -    | 49      |
+
+## Time and Space Complexity
+- **Time Complexity:** `O(n)`, since we traverse the array only once using two pointers.
+- **Space Complexity:** `O(1)`, since we use only a few extra variables.
+
+### Summary
+This approach efficiently finds the maximum water that can be stored using the **two-pointer technique** and has an optimal `O(n)` time complexity. 🚀
+
+# Trapping Rain Water
+
+## Problem Statement
+
+Given an array of non-negative integers `height` where each value represents the height of a bar with width 1, return the maximum amount of water that can be trapped between the bars after raining.
+
+### Example
+```
+Input: height = [0,2,0,3,1,0,1,3,2,1]
+Output: 9
+```
+
+### Constraints
+* `1 <= height.length <= 1000`
+* `0 <= height[i] <= 1000`
+
+## Approach 1: Using Pre-computed Arrays
+
+The key insight for this problem is to recognize that the amount of water that can be trapped at any position depends on the minimum of the maximum heights to the left and right of that position, minus the height at that position.
+
+For each position i:
+1. Find the maximum height to the left of i (leftMax[i])
+2. Find the maximum height to the right of i (rightMax[i])
+3. The water that can be trapped at position i = min(leftMax[i], rightMax[i]) - height[i]
+4. Sum up the water trapped at each position to get the total
+
+### Java Implementation
+
+```java
+public class TrappingRainWater {
+    public static int trap(int[] height) {
+        if (height == null || height.length <= 2) {
+            return 0;
+        }
+        
+        int n = height.length;
+        int totalWater = 0;
+        
+        // For each position, we need to find the maximum height to its left and right
+        int[] leftMax = new int[n];
+        int[] rightMax = new int[n];
+        
+        // Fill leftMax array
+        leftMax[0] = height[0];
+        for (int i = 1; i < n; i++) {
+            leftMax[i] = Math.max(leftMax[i-1], height[i]);
+        }
+        
+        // Fill rightMax array
+        rightMax[n-1] = height[n-1];
+        for (int i = n-2; i >= 0; i--) {
+            rightMax[i] = Math.max(rightMax[i+1], height[i]);
+        }
+        
+        // Calculate water trapped at each position
+        for (int i = 0; i < n; i++) {
+            // The water level is determined by the minimum of the highest bars on both sides
+            // Water trapped = min(leftMax, rightMax) - current height
+            int waterLevel = Math.min(leftMax[i], rightMax[i]);
+            totalWater += waterLevel - height[i];
+        }
+        
+        return totalWater;
+    }
+}
+```
+
+### Dry Run
+
+For the input `[0,2,0,3,1,0,1,3,2,1]`:
+
+| Index | Height | leftMax | rightMax | min(leftMax, rightMax) | Water Trapped |
+|-------|--------|---------|----------|------------------------|---------------|
+| 0     | 0      | 0       | 3        | 0                      | 0             |
+| 1     | 2      | 2       | 3        | 2                      | 0             |
+| 2     | 0      | 2       | 3        | 2                      | 2             |
+| 3     | 3      | 3       | 3        | 3                      | 0             |
+| 4     | 1      | 3       | 3        | 3                      | 2             |
+| 5     | 0      | 3       | 3        | 3                      | 3             |
+| 6     | 1      | 3       | 3        | 3                      | 2             |
+| 7     | 3      | 3       | 3        | 3                      | 0             |
+| 8     | 2      | 3       | 2        | 2                      | 0             |
+| 9     | 1      | 3       | 1        | 1                      | 0             |
+
+Total water trapped = 0 + 0 + 2 + 0 + 2 + 3 + 2 + 0 + 0 + 0 = 9
+
+### Complexity Analysis
+
+- **Time Complexity**: O(n) where n is the length of the height array. We traverse the array three times.
+- **Space Complexity**: O(n) for the two additional arrays (leftMax and rightMax).
+
+## Approach 2: Two Pointer Technique
+
+A more efficient approach uses a two-pointer technique to eliminate the need for pre-computing left and right maximum arrays, reducing the space complexity to O(1).
+
+### Key Insight
+- Use two pointers, left and right, starting from the beginning and end of the array.
+- Maintain two variables, leftMax and rightMax, to track the maximum heights seen from left and right sides.
+- At each step, determine which side has a smaller boundary (leftMax or rightMax).
+- Calculate water trapped at that position and move that pointer inward.
+
+### Java Implementation
+
+```java
+public class TrappingRainWaterTwoPointer {
+    public static int trap(int[] height) {
+        if (height == null || height.length <= 2) {
+            return 0;
+        }
+        
+        int left = 0;
+        int right = height.length - 1;
+        int leftMax = height[left];
+        int rightMax = height[right];
+        int totalWater = 0;
+        
+        while (left < right) {
+            // Update the maximum heights seen so far from left and right
+            leftMax = Math.max(leftMax, height[left]);
+            rightMax = Math.max(rightMax, height[right]);
+            
+            // If the left bar is lower than the right bar
+            if (leftMax < rightMax) {
+                // We know that water level at left is determined by leftMax
+                // Water trapped at this position = leftMax - height[left]
+                totalWater += leftMax - height[left];
+                left++; // Move left pointer inward
+            } 
+            // If the right bar is lower than or equal to the left bar
+            else {
+                // We know that water level at right is determined by rightMax
+                // Water trapped at this position = rightMax - height[right]
+                totalWater += rightMax - height[right];
+                right--; // Move right pointer inward
+            }
+        }
+        
+        return totalWater;
+    }
+}
+```
+
+### Explanation of Two Pointer Approach
+
+The two-pointer approach relies on an important property: if there is a higher bar on the right side (rightMax > leftMax), then the water level at the left position is determined solely by leftMax. Similarly, if there is a higher bar on the left side (leftMax ≥ rightMax), then the water level at the right position is determined solely by rightMax.
+
+1. Initialize two pointers `left = 0` and `right = height.length - 1`
+2. Initialize `leftMax = height[left]` and `rightMax = height[right]`
+3. While `left < right`:
+   - Update `leftMax` and `rightMax` if necessary
+   - If `leftMax < rightMax`, we know the water level at position `left` is determined by `leftMax`:
+      - Add `leftMax - height[left]` to the total water
+      - Move `left` pointer inward
+   - Otherwise, we know the water level at position `right` is determined by `rightMax`:
+      - Add `rightMax - height[right]` to the total water
+      - Move `right` pointer inward
+
+### Complexity Analysis
+
+- **Time Complexity**: O(n) where n is the length of the array. We only traverse the array once.
+- **Space Complexity**: O(1) as we only use a constant amount of extra space regardless of input size.
+
+
+## Problem Statement: Best Time to Buy and Sell Stock
+
+You are given an array `prices` where `prices[i]` represents the price of a given stock on the **i**-th day.
+
+You want to maximize your profit by choosing a **single day** to **buy one stock** and choosing a **different day** in the future to **sell that stock**.
+
+Return *the maximum profit you can achieve from this transaction*. If you cannot achieve any profit, return `0`.
+
+### Example 1
+```
+Input: prices = [7,1,5,3,6,4]
+Output: 5
+Explanation: 
+Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6 - 1 = 5.
+```
+
+### Example 2
+```
+Input: prices = [7,6,4,3,1]
+Output: 0
+Explanation: 
+No transactions are done since prices are always decreasing.
+```
+
+---
+
+## Approach 1: Brute Force
+- **Idea:** Check all possible pairs `(i, j)` where `i < j` to find the maximum profit.
+- **Algorithm:**
+   - Iterate over all days using two nested loops.
+   - For every pair of days, calculate `profit = prices[j] - prices[i]`.
+   - Keep track of the maximum profit.
+- **Time Complexity:** \( O(n^2) \)
+- **Space Complexity:** \( O(1) \)
+
+**Java Code:**
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int maxProfit = 0;
+        for (int i = 0; i < prices.length; i++) {
+            for (int j = i + 1; j < prices.length; j++) {
+                int profit = prices[j] - prices[i];
+                if (profit > maxProfit) {
+                    maxProfit = profit;
+                }
+            }
+        }
+        return maxProfit;
+    }
+}
+```
+
+---
+
+## Approach 2: One Pass (Optimal Solution)
+- **Idea:** Track the **minimum price** so far and calculate the potential profit on each day.
+- **Algorithm:**
+   1. Initialize `minPrice = Integer.MAX_VALUE` and `maxProfit = 0`.
+   2. Traverse the array:
+      - Update `minPrice` to the current price if it's lower.
+      - Calculate the profit: `profit = prices[i] - minPrice`.
+      - Update `maxProfit` if `profit > maxProfit`.
+- **Time Complexity:** \( O(n) \)
+- **Space Complexity:** \( O(1) \)
+
+**Java Code:**
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int minPrice = Integer.MAX_VALUE;
+        int maxProfit = 0;
+        
+        for (int price : prices) {
+            if (price < minPrice) {
+                minPrice = price; // Update min price
+            } else {
+                int profit = price - minPrice;
+                maxProfit = Math.max(maxProfit, profit);
+            }
+        }
+        
+        return maxProfit;
+    }
+}
+```
+
+---
+
+## Approach 3: Using Kadane’s Algorithm
+- **Idea:** Similar to finding the maximum subarray sum, consider the profit on each day as a continuous subarray.
+- Track the difference between days using:
+   - `CurrentProfit = prices[i] - prices[i-1]`
+   - Track `maxProfit` using Kadane’s algorithm.
+- **Time Complexity:** \( O(n) \)
+- **Space Complexity:** \( O(1) \)
+
+**Java Code:**
+```java
+class Solution {
+    public int maxProfit(int[] prices) {
+        int maxProfit = 0;
+        int currentProfit = 0;
+        
+        for (int i = 1; i < prices.length; i++) {
+            currentProfit += prices[i] - prices[i - 1];
+            currentProfit = Math.max(0, currentProfit);
+            maxProfit = Math.max(maxProfit, currentProfit);
+        }
+        
+        return maxProfit;
+    }
+}
+```
+
+---
+
+## Dry Run
+
+**Input:** prices = [7, 1, 5, 3, 6, 4]
+
+| Day | Price | Min Price | Profit | Max Profit |
+|------|--------|------------|--------|------------|
+| 1    | 7      | 7          | 0      | 0          |
+| 2    | 1      | 1          | 0      | 0          |
+| 3    | 5      | 1          | 4      | 4          |
+| 4    | 3      | 1          | 2      | 4          |
+| 5    | 6      | 1          | 5      | 5          |
+| 6    | 4      | 1          | 3      | 5          |
+
+**Output:** 5
+
