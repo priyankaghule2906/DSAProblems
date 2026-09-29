@@ -280,57 +280,7 @@ A window of size `k` starting at `left` must fit inside the array, so the last v
 
 ---
 
-## 6. Maximum Number of Vowels in a Substring of Given Length
-**Difficulty:** Medium
-
-**Description:**
-Given a string `s` and an integer `k`, return the maximum number of vowel letters (`a, e, i, o, u`) in any substring of `s` with length `k`.
-
-Example 1: `s = "abciiidef", k = 3` → Output `3` (`"iii"`).
-Example 2: `s = "aeiou", k = 2` → Output `2`.
-Example 3: `s = "leetcode", k = 3` → Output `2` (`"lee"`, `"eet"`, `"ode"`).
-
-**Code:**
-```java
-public int maxVowels(String s, int k) {
-    int count = 0;
-    int maxCount = 0;
-    // First window
-    for (int i = 0; i < k; i++) {
-        if (isVowel(s.charAt(i))) {
-            count++;
-        }
-    }
-    maxCount = count;
-    // Slide window
-    for (int right = k; right < s.length(); right++) {
-        // Remove left character
-        if (isVowel(s.charAt(right - k))) {
-            count--;
-        }
-        // Add right character
-        if (isVowel(s.charAt(right))) {
-            count++;
-        }
-        maxCount = Math.max(maxCount, count);
-    }
-
-    return maxCount;
-}
-
-private boolean isVowel(char c) {
-    return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
-}
-```
-
-**Logic / Approach:**
-1. Calculate the first window.
-2. Store as answer.
-3. Remove the leaving left element.
-4. Add the incoming right element.
-5. Update the answer.
-
----
+## 6. 
 
 ## 7. Maximum Average Subarray I
 **Difficulty:** Easy

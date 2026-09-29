@@ -32,3 +32,18 @@ Optimal solution is to use deque.
 Rule 1: we always maintain elements in deque in decreasing/ descending order
 Rule 2 : We always maintain the bound for window k
 ```
+
+
+A D O B E C O D E B A  N  C
+0 1 2 3 4 5 6 7 8 9 10 11 12
+need A1 B1 C1
+right     0  1  2 3 4 5
+          A  D  O B E C O D E B A  N  C
+left      0  0  0
+formed    1  1  1 2 2 3
+required  3  3
+minLeft   0
+window    A1 D1
+
+minLen                6
+minLeft               0

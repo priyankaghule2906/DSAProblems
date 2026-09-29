@@ -259,6 +259,304 @@ public class SlidingWindowPatterns {
 
     }
 
+    @Test
+    public void testIntegerCompare(){
+        int x = 10, y= 15, z = 20, w = 15;
+
+        System.out.println("x compare y : "+ Integer.compare(x, y));
+        System.out.println("z compare x : "+ Integer.compare(z, x));
+        System.out.println("z compare x : "+ Integer.compare(y, w));
+
+//        if x < y  -1
+//        if x > y  1
+//        else 0
+    }
+
+
+    @Test
+    public void testMinWindowSubsequence(){
+        System.out.println(minWindow("abcdebdde", "bde"));
+
+        /*
+         a b c d e b d d e  b d e
+         0 1 2 3 4 5 6 7 8  0 1 2
+        */
+    }
+    // we have to find the minimum window subsequence, the order of the characters should match in the
+    // above example first match is bcde  second match is at bdde, both the strings have same length we have return the first one
+    public String minWindow(String s, String t){
+     int sLen = s.length();
+     int tLen = t.length();
+
+     if(tLen > sLen) return "";
+     int minStart = -1;
+     int minLength = Integer.MAX_VALUE;
+
+     int sPtr = 0;
+     while(sPtr < sLen){
+         int tPtr = 0;
+         // forwards pass
+         while (sPtr < sLen){
+             if(s.charAt(sPtr) == t.charAt(tPtr)) {
+                 tPtr++;
+             }
+             if(tPtr == tLen) break; // all the characters from t has matched
+             sPtr++;
+         }
+
+         if(tPtr < tLen) break; // all the characters t could not be found in s
+
+         // backward pass
+         int end = sPtr;
+         tPtr = tLen -1;
+         int start = end;
+
+         while(tPtr >= 0){
+             if(t.charAt(tPtr) == s.charAt(start)){
+                 tPtr--;
+             }
+             start--;
+         }
+         start++;  // adjust the overshoot
+
+         if(end - start + 1 < minLength){
+             minLength = end- start +1;
+             minStart = start;
+         }
+
+         sPtr = start+1;
+
+     }
+
+     return minStart == -1 ? "" : s.substring(minStart, minStart + minLength);
+    }
+
+    @Test
+    public void testShortestSubarray(){
+        System.out.println(shortestSubarray(new int[]{2, -1, 2, 3, -2, 4}, 5));
+    }
+
+    public int shortestSubarray(int[] nums , int k){
+        int n = nums.length;
+        long[] prefixSum = new long[n+1];
+        for(int i =0;i<n;i++){
+            prefixSum[i+1] = prefixSum[i] + nums[i];
+        }
+        Deque<Integer> deque = new ArrayDeque<>();
+        int minLen = Integer.MAX_VALUE;
+
+        for(int i=0;i<=n;i++){
+            while (!deque.isEmpty() && prefixSum[i] - prefixSum[deque.peekFirst()] >=k){
+                minLen = Math.min(minLen, i - deque.pollFirst());
+            }
+            while (!deque.isEmpty() && prefixSum[i] <= prefixSum[deque.peekLast()]){
+                deque.pollLast();
+            }
+            deque.offerLast(i);
+        }
+        return minLen == Integer.MAX_VALUE ? -1 : minLen;
+    }
+
+    @Test
+    public void testMinBitFlips(){
+        System.out.println(minKBitFlips(new int[]{0,0,0,1,0,1,1,0}, 3));
+    }
+
+    public int minKBitFlips(int[] nums, int k){
+        int n = nums.length;
+        int flipCounts = 0;
+        int ans = 0;
+        int[] diff = new int[n+1];
+
+        for(int i=0;i<n;i++){
+            flipCounts+=diff[i];
+            int currentBit = (nums[i] + flipCounts) % 2;
+            if(currentBit == 0){
+                if((i+k) > n) return -1;
+                ans++;
+                flipCounts++;
+                diff[i+k]--;
+            }
+        }
+
+        return ans;
+    }
+
+    @Test
+    public void testFindLengthOfShortestSubarray(){
+        System.out.println(findLengthOfTheShortestSubarray(new int[]{11,10,18,14,12,11,16,20,13,11}));
+    }
+
+    public int findLengthOfTheShortestSubarray(int[] arr){
+        int n  = arr.length;
+        // find the sorted prefix
+        int left = 0;
+        while (left < n-1 && arr[left] <= arr[left+1]){
+            left++;
+        }
+        // find the sorted suffix
+        int right = n-1;
+        while(right > 0 && arr[right-1] <= arr[right]){
+            right--;
+        }
+        // find the min among prefix (everything after prefix ) and suffix (everything before suffix)
+        int min = Math.min(n-left-1, right);
+
+        // merge prefix and suffix until sorted
+
+        int i =0;
+        int j=right;
+
+        while (i<=left && j <n){
+            if(arr[i] <= arr[j]){
+                min = Math.min(min, j-i-1);
+                i++;
+            } else {
+                j++;
+            }
+        }
+        return min;
+    }
+
+    @Test
+    public void testNumberOfStrings(){
+        System.out.println(numberOfSubstrings("abcabc"));
+    }
+
+    public int numberOfSubstrings(String s) {
+        int[] freq = new int[3];
+        int left = 0, count = 0;
+
+        for (int right = 0; right < s.length(); right++) {
+            freq[s.charAt(right) - 'a']++;
+
+            while (freq[0] > 0 && freq[1] > 0 && freq[2] > 0) {
+                count += s.length() - right; // all substrings starting at `left`, ending at right or later
+                freq[s.charAt(left) - 'a']--;
+                left++;
+            }
+        }
+
+        return count;
+    }
+
+    @Test
+    public void testFindSubstring(){
+        System.out.println(findSubstring("barfoothefoobarman", new String[]{"foo", "bar"}));
+    }
+    public List<Integer> findSubstring(String s, String[] words){
+        List<Integer> result = new ArrayList<>();
+        if(s == null || s.isEmpty() || words == null || words.length == 0) return result;
+
+        // all the words from words array are of same length that gives us fixed window size
+        int wordLength = words[0].length();
+        int numOfWords = words.length;
+        int totalLength = wordLength * numOfWords;
+        Map<String, Integer> need = new HashMap<>();
+        for(String word: words){
+            need.merge(word, 1, Integer::sum);
+        }
+
+        // run the loop from position 0, 1, 2 until it covers all the starting points word length
+        for(int offset=0;offset < wordLength; offset++){
+            int left = offset;
+            int count =0;
+            Map<String, Integer> window = new HashMap<>();
+                for(int right =  offset; right+wordLength <= s.length(); right+=wordLength){
+                    String word = s.substring(right, right+wordLength);
+
+                    if(need.containsKey(word)) {
+                        window.merge(word, 1, Integer::sum);
+                        count++;
+
+                        while (window.get(word) > need.get(word)){
+                            // slide window
+                            String leftWord = s.substring(left, left + wordLength);
+                            window.merge(leftWord, -1, Integer::sum);
+                            count--;
+                            left += wordLength;
+                        }
+
+                        if(count == numOfWords){
+                            result.add(left);
+                            // slide the window
+                            String leftWord = s.substring(left, left+wordLength);
+                            window.merge(leftWord, -1, Integer::sum);
+                            count--;
+                            left = left+ wordLength;
+                        }
+
+                    } else {
+                        window.clear();
+                        count = 0;
+                        left = right + wordLength;
+                    }
+
+                }
+        }
+
+        return result;
+    }
+
+    @Test
+    public void testMaxFrequency(){
+        System.out.println(maxFrequency(new int[]{1,4,8,13}, 5));
+    }
+
+
+    public int maxFrequency(int[] nums, int k) {
+        Arrays.sort(nums);
+        long sum = 0;
+        int left = 0, maxFreq = 0;
+
+        for (int right = 0; right < nums.length; right++) {
+            sum += nums[right];
+
+            // cost to make window [left, right] all equal to nums[right]
+            while ((long) nums[right] * (right - left + 1) - sum > k) {
+                sum -= nums[left];
+                left++;
+            }
+
+            maxFreq = Math.max(maxFreq, right - left + 1);
+        }
+
+        return maxFreq;
+    }
+
+    @Test
+    public void testMaxSubarrayLength(){
+        maxSubarrayLength(new int[]{1,2,3,1,2,3,1,2}, 2);
+    }
+
+    public int maxSubarrayLength(int[] nums, int k) {
+        int longestSubarray = 0;
+        int left = 0;
+        Map<Integer, Integer> freq = new HashMap<>();
+        for(int right = 0; right < nums.length; right++){
+            freq.merge(nums[right], 1, Integer::sum);
+            while(nums[right] > k){
+                freq.merge(nums[left], -1, Integer::sum);
+                left++;
+            }
+            longestSubarray = Math.max(longestSubarray, right-left+1);
+        }
+        return longestSubarray;
+    }
+
+    @Test
+    public void testPrintSubArrays(){
+        int[] nums = {2,1,4,3};
+        int n = nums.length;
+        for(int i =0; i < n; i++) {
+            System.out.println(" ");
+            System.out.print("[");
+            for(int j = i; j<n; j++){
+                System.out.print(nums[j]);
+            }
+            System.out.print("]");
+        }
+    }
 
 
 
