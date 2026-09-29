@@ -1,4 +1,3 @@
-````
 # Two Pointers Problem Notes
 
 ## Problem List
@@ -161,7 +160,7 @@ if (i > 0 && nums[i] == nums[i - 1]) continue;
 
 We also need following loop to skip duplicate second and third element
 
-Skip duplicate second elements while (left < right && nums[left] == nums[left - 1]) left++; 
+Skip duplicate second elements while (left < right && nums[left] == nums[left - 1]) left++;
 Skip duplicate third elements while  (left < right && nums[right] == nums[right + 1]) right--;
 
 [-2, 0, 0, 0, 2, 2] if we take following example without above
@@ -4148,4 +4147,3 @@ _None noted._
 5. reverse(word.toCharArray(), 0, end++) → end++ is unnecessary because
    you return immediately; use end.
 
-````
