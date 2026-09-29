@@ -1,3 +1,4 @@
+````
 # Two Pointers Problem Notes
 
 ## Problem List
@@ -98,18 +99,16 @@ Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
 **Code:**
 
 ```java
-   public int[] twoSum(int[] numbers, int target) {
-      int left = 0, right = numbers.length - 1;
-      while (left < right) {
-         int sum = numbers[left] + numbers[right];
-         if (sum == target) return new int[]{left + 1, right + 1};
-         else if (sum < target) left++;
-         else right--;
-      }
-      return new int[]{-1, -1};
-   }
-
-
+public int[] twoSum(int[] numbers, int target) {
+    int left = 0, right = numbers.length - 1;
+    while (left < right) {
+        int sum = numbers[left] + numbers[right];
+        if (sum == target) return new int[]{left + 1, right + 1};
+        else if (sum < target) left++;
+        else right--;
+    }
+    return new int[]{-1, -1};
+}
 ```
 **Logic / Approach:**
 
@@ -128,24 +127,24 @@ Given an array, find all unique triplets that sum to zero.
 **Code:**
 
 ```java
- public List<List<Integer>> threeSum(int[] nums) {
-   Arrays.sort(nums);
-   List<List<Integer>> result = new ArrayList<>();
-   for (int i = 0; i < nums.length - 2; i++) {
-      if (i > 0 && nums[i] == nums[i - 1]) continue;
-      int left = i + 1, right = nums.length - 1;
-      while (left < right) {
-         int sum = nums[i] + nums[left] + nums[right];
-         if (sum == 0) {
-            result.add(Arrays.asList(nums[i], nums[left], nums[right]));
-            while (left < right && nums[left] == nums[left + 1]) left++;
-            while (left < right && nums[right] == nums[right - 1]) right--;
-            left++; right--;
-         } else if (sum < 0) left++;
-         else right--;
-      }
-   }
-   return result;
+public List<List<Integer>> threeSum(int[] nums) {
+    Arrays.sort(nums);
+    List<List<Integer>> result = new ArrayList<>();
+    for (int i = 0; i < nums.length - 2; i++) {
+        if (i > 0 && nums[i] == nums[i - 1]) continue;
+        int left = i + 1, right = nums.length - 1;
+        while (left < right) {
+            int sum = nums[i] + nums[left] + nums[right];
+            if (sum == 0) {
+                result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                while (left < right && nums[left] == nums[left + 1]) left++;
+                while (left < right && nums[right] == nums[right - 1]) right--;
+                left++; right--;
+            } else if (sum < 0) left++;
+            else right--;
+        }
+    }
+    return result;
 }
 ```
 **Logic / Approach:**
@@ -201,20 +200,20 @@ Explanation: The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
 
 ```java
 public int threeSumClosest(int[] nums, int target) {
-   Arrays.sort(nums);
-   int closest = nums[0] + nums[1] + nums[2];
-   for (int i = 0; i < nums.length - 2; i++) {
-      int left = i + 1, right = nums.length - 1;
-      while (left < right) {
-         int sum = nums[i] + nums[left] + nums[right];
-         if (Math.abs(sum - target) < Math.abs(closest - target))
+    Arrays.sort(nums);
+    int closest = nums[0] + nums[1] + nums[2];
+    for (int i = 0; i < nums.length - 2; i++) {
+        int left = i + 1, right = nums.length - 1;
+        while (left < right) {
+            int sum = nums[i] + nums[left] + nums[right];
+            if (Math.abs(sum - target) < Math.abs(closest - target))
             closest = sum;
-         if (sum == target) return sum;
-         else if (sum < target) left++;
-         else right--;
-      }
-   }
-   return closest;
+            if (sum == target) return sum;
+            else if (sum < target) left++;
+            else right--;
+        }
+    }
+    return closest;
 }
 ```
 **Logic / Approach:**
@@ -249,33 +248,33 @@ Given an array and a target, count the number of triplets whose sum is strictly 
 ```java
 public int threeSumSmaller(int[] nums, int target) {
 
-Arrays.sort(nums);
+    Arrays.sort(nums);
 
-int count = 0;
+    int count = 0;
 
-for (int i = 0; i < nums.length - 2; i++) {
+    for (int i = 0; i < nums.length - 2; i++) {
 
-int left = i + 1, right = nums.length - 1;
+        int left = i + 1, right = nums.length - 1;
 
-while (left < right) {
+        while (left < right) {
 
-if (nums[i] + nums[left] + nums[right] < target) {
+            if (nums[i] + nums[left] + nums[right] < target) {
 
-count += right - left;
+                count += right - left;
 
-left++;
+                left++;
 
-} else {
+            } else {
 
-right--;
+                right--;
 
-}
+            }
 
-}
+        }
 
-}
+    }
 
-return count;
+    return count;
 
 }
 ```
@@ -333,49 +332,49 @@ target.
 ```java
 public List<List<Integer>> fourSum(int[] nums, int target) {
 
-Arrays.sort(nums);
+    Arrays.sort(nums);
 
-List<List<Integer>> result = new ArrayList<>();
+    List<List<Integer>> result = new ArrayList<>();
 
-int n = nums.length;
+    int n = nums.length;
 
-for (int i = 0; i < n - 3; i++) {
+    for (int i = 0; i < n - 3; i++) {
 
-if (i > 0 && nums[i] == nums[i - 1]) continue;
+        if (i > 0 && nums[i] == nums[i - 1]) continue;
 
-for (int j = i + 1; j < n - 2; j++) {
+        for (int j = i + 1; j < n - 2; j++) {
 
-if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+            if (j > i + 1 && nums[j] == nums[j - 1]) continue;
 
-int left = j + 1, right = n - 1;
+            int left = j + 1, right = n - 1;
 
-while (left < right) {
+            while (left < right) {
 
-long sum = (long) nums[i] + nums[j] + nums[left] +
-nums[right];
+                long sum = (long) nums[i] + nums[j] + nums[left] +
+                nums[right];
 
-if (sum == target) {
+                if (sum == target) {
 
-result.add(Arrays.asList(nums[i], nums[j], nums[left],
-nums[right]));
+                    result.add(Arrays.asList(nums[i], nums[j], nums[left],
+                    nums[right]));
 
-while (left < right && nums[left] == nums[left + 1]) left++;
+                    while (left < right && nums[left] == nums[left + 1]) left++;
 
-while (left < right && nums[right] == nums[right - 1]) right--;
+                    while (left < right && nums[right] == nums[right - 1]) right--;
 
-left++; right--;
+                    left++; right--;
 
-} else if (sum < target) left++;
+                } else if (sum < target) left++;
 
-else right--;
+                else right--;
 
-}
+            }
 
-}
+        }
 
-}
+    }
 
-return result;
+    return result;
 
 }
 ```
@@ -403,23 +402,23 @@ x-axis form a container holding the most water.
 ```java
 public int maxArea(int[] height) {
 
-int left = 0, right = height.length - 1, maxArea = 0;
+    int left = 0, right = height.length - 1, maxArea = 0;
 
-while (left < right) {
+    while (left < right) {
 
-int width = right - left;
+        int width = right - left;
 
-int minHeight = Math.min(height[left], height[right]);
+        int minHeight = Math.min(height[left], height[right]);
 
-maxArea = Math.max(maxArea, width * minHeight);
+        maxArea = Math.max(maxArea, width * minHeight);
 
-if (height[left] < height[right]) left++;
+        if (height[left] < height[right]) left++;
 
-else right--;
+        else right--;
 
-}
+    }
 
-return maxArea;
+    return maxArea;
 
 }
 ```
@@ -466,33 +465,33 @@ raining.
 ```java
 public int trap(int[] height) {
 
-int left = 0, right = height.length - 1;
+    int left = 0, right = height.length - 1;
 
-int leftMax = 0, rightMax = 0, water = 0;
+    int leftMax = 0, rightMax = 0, water = 0;
 
-while (left < right) {
+    while (left < right) {
 
-if (height[left] < height[right]) {
+        if (height[left] < height[right]) {
 
-leftMax = Math.max(leftMax, height[left]);
+            leftMax = Math.max(leftMax, height[left]);
 
-water += leftMax - height[left];
+            water += leftMax - height[left];
 
-left++;
+            left++;
 
-} else {
+        } else {
 
-rightMax = Math.max(rightMax, height[right]);
+            rightMax = Math.max(rightMax, height[right]);
 
-water += rightMax - height[right];
+            water += rightMax - height[right];
 
-right--;
+            right--;
 
-}
+        }
 
-}
+    }
 
-return water;
+    return water;
 
 }
 ```
@@ -641,24 +640,24 @@ alphanumeric characters and ignoring case.
 ```java
 public boolean isPalindrome(String s) {
 
-int left = 0, right = s.length() - 1;
+    int left = 0, right = s.length() - 1;
 
-while (left < right) {
+    while (left < right) {
 
-while (left < right && !Character.isLetterOrDigit(s.charAt(left)))
-left++;
+        while (left < right && !Character.isLetterOrDigit(s.charAt(left)))
+        left++;
 
-while (left < right && !Character.isLetterOrDigit(s.charAt(right)))
-right--;
+        while (left < right && !Character.isLetterOrDigit(s.charAt(right)))
+        right--;
 
-if (Character.toLowerCase(s.charAt(left)) !=
-Character.toLowerCase(s.charAt(right))) return false;
+        if (Character.toLowerCase(s.charAt(left)) !=
+        Character.toLowerCase(s.charAt(right))) return false;
 
-left++; right--;
+        left++; right--;
 
-}
+    }
 
-return true;
+    return true;
 
 }
 ```
@@ -686,36 +685,36 @@ most one character.
 ```java
 public boolean validPalindrome(String s) {
 
-int left = 0, right = s.length() - 1;
+    int left = 0, right = s.length() - 1;
 
-while (left < right) {
+    while (left < right) {
 
-if (s.charAt(left) != s.charAt(right)) {
+        if (s.charAt(left) != s.charAt(right)) {
 
-return isPalindromeRange(s, left + 1, right) || isPalindromeRange(s,
-left, right - 1);
+            return isPalindromeRange(s, left + 1, right) || isPalindromeRange(s,
+            left, right - 1);
 
-}
+        }
 
-left++; right--;
+        left++; right--;
 
-}
+    }
 
-return true;
+    return true;
 
 }
 
 private boolean isPalindromeRange(String s, int left, int right) {
 
-while (left < right) {
+    while (left < right) {
 
-if (s.charAt(left) != s.charAt(right)) return false;
+        if (s.charAt(left) != s.charAt(right)) return false;
 
-left++; right--;
+        left++; right--;
 
-}
+    }
 
-return true;
+    return true;
 
 }
 ```
@@ -775,23 +774,23 @@ most two people), find the minimum number of boats needed.
 ```java
 public int numRescueBoats(int[] people, int limit) {
 
-Arrays.sort(people);
+    Arrays.sort(people);
 
-int left = 0, right = people.length - 1;
+    int left = 0, right = people.length - 1;
 
-int boats = 0;
+    int boats = 0;
 
-while (left <= right) {
+    while (left <= right) {
 
-if (people[left] + people[right] <= limit) left++;
+        if (people[left] + people[right] <= limit) left++;
 
-right--;
+        right--;
 
-boats++;
+        boats++;
 
-}
+    }
 
-return boats;
+    return boats;
 
 }
 ```
@@ -843,37 +842,37 @@ each number sorted in non-decreasing order.
 ```java
 public int[] sortedSquares(int[] nums) {
 
-int n = nums.length;
+    int n = nums.length;
 
-int[] result = new int[n];
+    int[] result = new int[n];
 
-int left = 0, right = n - 1, writeIndex = n - 1;
+    int left = 0, right = n - 1, writeIndex = n - 1;
 
-while (left <= right) {
+    while (left <= right) {
 
-int leftSquare = nums[left] * nums[left];
+        int leftSquare = nums[left] * nums[left];
 
-int rightSquare = nums[right] * nums[right];
+        int rightSquare = nums[right] * nums[right];
 
-if (leftSquare > rightSquare) {
+        if (leftSquare > rightSquare) {
 
-result[writeIndex] = leftSquare;
+            result[writeIndex] = leftSquare;
 
-left++;
+            left++;
 
-} else {
+        } else {
 
-result[writeIndex] = rightSquare;
+            result[writeIndex] = rightSquare;
 
-right--;
+            right--;
 
-}
+        }
 
-writeIndex--;
+        writeIndex--;
 
-}
+    }
 
-return result;
+    return result;
 
 }
 ```
@@ -901,27 +900,27 @@ whose sum equals k.
 ```java
 public int maxOperations(int[] nums, int k) {
 
-Arrays.sort(nums);
+    Arrays.sort(nums);
 
-int left = 0, right = nums.length - 1, count = 0;
+    int left = 0, right = nums.length - 1, count = 0;
 
-while (left < right) {
+    while (left < right) {
 
-int sum = nums[left] + nums[right];
+        int sum = nums[left] + nums[right];
 
-if (sum == k) {
+        if (sum == k) {
 
-count++;
+            count++;
 
-left++; right--;
+            left++; right--;
 
-} else if (sum < k) left++;
+        } else if (sum < k) left++;
 
-else right--;
+        else right--;
 
-}
+    }
 
-return count;
+    return count;
 
 }
 ```
@@ -952,23 +951,23 @@ k.
 ```java
 public int removeDuplicates(int[] nums) {
 
-if (nums.length == 0) return 0;
+    if (nums.length == 0) return 0;
 
-int slow = 0;
+    int slow = 0;
 
-for (int fast = 1; fast < nums.length; fast++) {
+    for (int fast = 1; fast < nums.length; fast++) {
 
-if (nums[fast] != nums[slow]) {
+        if (nums[fast] != nums[slow]) {
 
-slow++;
+            slow++;
 
-nums[slow] = nums[fast];
+            nums[slow] = nums[fast];
 
-}
+        }
 
-}
+    }
 
-return slow + 1;
+    return slow + 1;
 
 }
 ```
@@ -996,21 +995,21 @@ element appears at most twice. Return the new length k.
 ```java
 public int removeDuplicates(int[] nums) {
 
-int slow = 0;
+    int slow = 0;
 
-for (int fast = 0; fast < nums.length; fast++) {
+    for (int fast = 0; fast < nums.length; fast++) {
 
-if (slow < 2 || nums[fast] != nums[slow - 2]) {
+        if (slow < 2 || nums[fast] != nums[slow - 2]) {
 
-nums[slow] = nums[fast];
+            nums[slow] = nums[fast];
 
-slow++;
+            slow++;
 
-}
+        }
 
-}
+    }
 
-return slow;
+    return slow;
 
 }
 ```
@@ -1081,51 +1080,51 @@ Return the linked list sorted as well.
 ```java
 class Solution {
 
-public ListNode deleteDuplicates(ListNode head) {
+    public ListNode deleteDuplicates(ListNode head) {
 
-ListNode dummy = new ListNode(0);
+        ListNode dummy = new ListNode(0);
 
-dummy.next = head;
+        dummy.next = head;
 
-ListNode prev = dummy;
+        ListNode prev = dummy;
 
-ListNode curr = head;
+        ListNode curr = head;
 
-while (curr != null) {
+        while (curr != null) {
 
-// Duplicate found
+            // Duplicate found
 
-if (curr.next != null && curr.val == curr.next.val) {
+            if (curr.next != null && curr.val == curr.next.val) {
 
-int duplicateValue = curr.val;
+                int duplicateValue = curr.val;
 
-// Skip all nodes having duplicateValue
+                // Skip all nodes having duplicateValue
 
-while (curr != null && curr.val == duplicateValue) {
+                while (curr != null && curr.val == duplicateValue) {
 
-curr = curr.next;
+                    curr = curr.next;
 
-}
+                }
 
-// Remove entire duplicate block
+                // Remove entire duplicate block
 
-prev.next = curr;
+                prev.next = curr;
 
-} else {
+            } else {
 
-// Current node is unique
+                // Current node is unique
 
-prev = curr;
+                prev = curr;
 
-curr = curr.next;
+                curr = curr.next;
 
-}
+            }
 
-}
+        }
 
-return dummy.next;
+        return dummy.next;
 
-}
+    }
 
 }
 ```
@@ -1179,21 +1178,21 @@ in-place and return the new length.
 ```java
 public int removeElement(int[] nums, int val) {
 
-int slow = 0;
+    int slow = 0;
 
-for (int fast = 0; fast < nums.length; fast++) {
+    for (int fast = 0; fast < nums.length; fast++) {
 
-if (nums[fast] != val) {
+        if (nums[fast] != val) {
 
-nums[slow] = nums[fast];
+            nums[slow] = nums[fast];
 
-slow++;
+            slow++;
 
-}
+        }
 
-}
+    }
 
-return slow;
+    return slow;
 
 }
 ```
@@ -1220,23 +1219,23 @@ relative order of the non-zero elements, in-place.
 ```java
 public void moveZeroes(int[] nums) {
 
-int slow = 0;
+    int slow = 0;
 
-for (int fast = 0; fast < nums.length; fast++) {
+    for (int fast = 0; fast < nums.length; fast++) {
 
-if (nums[fast] != 0) {
+        if (nums[fast] != 0) {
 
-int temp = nums[slow];
+            int temp = nums[slow];
 
-nums[slow] = nums[fast];
+            nums[slow] = nums[fast];
 
-nums[fast] = temp;
+            nums[fast] = temp;
 
-slow++;
+            slow++;
 
-}
+        }
 
-}
+    }
 
 }
 ```
@@ -1264,23 +1263,23 @@ producing one sorted array in-place.
 ```java
 public void merge(int[] nums1, int m, int[] nums2, int n) {
 
-int i = m - 1, j = n - 1, write = m + n - 1;
+    int i = m - 1, j = n - 1, write = m + n - 1;
 
-while (j >= 0) {
+    while (j >= 0) {
 
-if (i >= 0 && nums1[i] > nums2[j]) {
+        if (i >= 0 && nums1[i] > nums2[j]) {
 
-nums1[write] = nums1[i]; i--;
+            nums1[write] = nums1[i]; i--;
 
-} else {
+        } else {
 
-nums1[write] = nums2[j]; j--;
+            nums1[write] = nums2[j]; j--;
 
-}
+        }
 
-write--;
+        write--;
 
-}
+    }
 
 }
 ```
@@ -1307,29 +1306,29 @@ integers to the back (any order within each group).
 ```java
 public int[] sortArrayByParity(int[] nums) {
 
-int left = 0, right = nums.length - 1;
+    int left = 0, right = nums.length - 1;
 
-while (left < right) {
+    while (left < right) {
 
-if (nums[left] % 2 == 0) {
+        if (nums[left] % 2 == 0) {
 
-left++;
+            left++;
 
-} else {
+        } else {
 
-int temp = nums[left];
+            int temp = nums[left];
 
-nums[left] = nums[right];
+            nums[left] = nums[right];
 
-nums[right] = temp;
+            nums[right] = temp;
 
-right--;
+            right--;
 
-}
+        }
 
-}
+    }
 
-return nums;
+    return nums;
 
 }
 ```
@@ -1357,31 +1356,31 @@ number.
 ```java
 public int[] sortArrayByParityII(int[] nums) {
 
-int even = 0, odd = 1, n = nums.length;
+    int even = 0, odd = 1, n = nums.length;
 
-while (even < n && odd < n) {
+    while (even < n && odd < n) {
 
-if (nums[even] % 2 == 0) {
+        if (nums[even] % 2 == 0) {
 
-even += 2;
+            even += 2;
 
-} else if (nums[odd] % 2 == 1) {
+        } else if (nums[odd] % 2 == 1) {
 
-odd += 2;
+            odd += 2;
 
-} else {
+        } else {
 
-int temp = nums[even];
+            int temp = nums[even];
 
-nums[even] = nums[odd];
+            nums[even] = nums[odd];
 
-nums[odd] = temp;
+            nums[odd] = temp;
 
-}
+        }
 
-}
+    }
 
-return nums;
+    return nums;
 
 }
 ```
@@ -1409,29 +1408,29 @@ come first, then 1s, then 2s.
 ```java
 public void sortColors(int[] nums) {
 
-int low = 0, mid = 0, high = nums.length - 1;
+    int low = 0, mid = 0, high = nums.length - 1;
 
-while (mid <= high) {
+    while (mid <= high) {
 
-if (nums[mid] == 0) {
+        if (nums[mid] == 0) {
 
-int t = nums[low]; nums[low] = nums[mid]; nums[mid] = t;
+            int t = nums[low]; nums[low] = nums[mid]; nums[mid] = t;
 
-low++; mid++;
+            low++; mid++;
 
-} else if (nums[mid] == 1) {
+        } else if (nums[mid] == 1) {
 
-mid++;
+            mid++;
 
-} else {
+        } else {
 
-int t = nums[mid]; nums[mid] = nums[high]; nums[high] = t;
+            int t = nums[mid]; nums[mid] = nums[high]; nums[high] = t;
 
-high--;
+            high--;
 
-}
+        }
 
-}
+    }
 
 }
 ```
@@ -1460,28 +1459,28 @@ length.
 ```java
 public int compress(char[] chars) {
 
-int write = 0, read = 0, n = chars.length;
+    int write = 0, read = 0, n = chars.length;
 
-while (read < n) {
+    while (read < n) {
 
-char c = chars[read];
+        char c = chars[read];
 
-int count = 0;
+        int count = 0;
 
-while (read < n && chars[read] == c) { read++; count++; }
+        while (read < n && chars[read] == c) { read++; count++; }
 
-chars[write++] = c;
+        chars[write++] = c;
 
-if (count > 1) {
+        if (count > 1) {
 
-for (char d : Integer.toString(count).toCharArray()) chars[write++]
-= d;
+            for (char d : Integer.toString(count).toCharArray()) chars[write++]
+            = d;
 
-}
+        }
 
-}
+    }
 
-return write;
+    return write;
 
 }
 ```
@@ -1523,19 +1522,19 @@ until no such pairs remain.
 ```java
 public String removeDuplicates(String s) {
 
-char[] stack = new char[s.length()];
+    char[] stack = new char[s.length()];
 
-int top = -1;
+    int top = -1;
 
-for (char c : s.toCharArray()) {
+    for (char c : s.toCharArray()) {
 
-if (top >= 0 && stack[top] == c) top--;
+        if (top >= 0 && stack[top] == c) top--;
 
-else stack[++top] = c;
+        else stack[++top] = c;
 
-}
+    }
 
-return new String(stack, 0, top + 1);
+    return new String(stack, 0, top + 1);
 
 }
 ```
@@ -1565,33 +1564,33 @@ once).
 ```java
 public int[] intersection(int[] nums1, int[] nums2) {
 
-Arrays.sort(nums1);
+    Arrays.sort(nums1);
 
-Arrays.sort(nums2);
+    Arrays.sort(nums2);
 
-int i = 0, j = 0;
+    int i = 0, j = 0;
 
-Set<Integer> result = new LinkedHashSet<>();
+    Set<Integer> result = new LinkedHashSet<>();
 
-while (i < nums1.length && j < nums2.length) {
+    while (i < nums1.length && j < nums2.length) {
 
-if (nums1[i] == nums2[j]) {
+        if (nums1[i] == nums2[j]) {
 
-result.add(nums1[i]); i++; j++;
+            result.add(nums1[i]); i++; j++;
 
-} else if (nums1[i] < nums2[j]) i++;
+        } else if (nums1[i] < nums2[j]) i++;
 
-else j++;
+        else j++;
 
-}
+    }
 
-int[] arr = new int[result.size()];
+    int[] arr = new int[result.size()];
 
-int idx = 0;
+    int idx = 0;
 
-for (int v : result) arr[idx++] = v;
+    for (int v : result) arr[idx++] = v;
 
-return arr;
+    return arr;
 
 }
 ```
@@ -1619,27 +1618,27 @@ as many times as it shows in both.
 ```java
 public int[] intersect(int[] nums1, int[] nums2) {
 
-Arrays.sort(nums1);
+    Arrays.sort(nums1);
 
-Arrays.sort(nums2);
+    Arrays.sort(nums2);
 
-int i = 0, j = 0;
+    int i = 0, j = 0;
 
-List<Integer> result = new ArrayList<>();
+    List<Integer> result = new ArrayList<>();
 
-while (i < nums1.length && j < nums2.length) {
+    while (i < nums1.length && j < nums2.length) {
 
-if (nums1[i] == nums2[j]) {
+        if (nums1[i] == nums2[j]) {
 
-result.add(nums1[i]); i++; j++;
+            result.add(nums1[i]); i++; j++;
 
-} else if (nums1[i] < nums2[j]) i++;
+        } else if (nums1[i] < nums2[j]) i++;
 
-else j++;
+        else j++;
 
-}
+    }
 
-return result.stream().mapToInt(Integer::intValue).toArray();
+    return result.stream().mapToInt(Integer::intValue).toArray();
 
 }
 ```
@@ -1721,31 +1720,31 @@ Given strings s and t, determine if s is a subsequence of t.
 ```java
 public boolean isSubsequence(String s, String t) {
 
-if(s.length() > t.length()) return false;
+    if(s.length() > t.length()) return false;
 
-int n1 = s.length();
+    int n1 = s.length();
 
-int n2 = t.length();
+    int n2 = t.length();
 
-int i=0,j=0;
+    int i=0,j=0;
 
-while(i<n1 && j<n2) {
+    while(i<n1 && j<n2) {
 
-if(s.charAt(i) == t.charAt(j)) {
+        if(s.charAt(i) == t.charAt(j)) {
 
-i++;
+            i++;
 
-j++;
+            j++;
 
-} else {
+        } else {
 
-j++;
+            j++;
 
-}
+        }
 
-}
+    }
 
-return n1 == i;
+    return n1 == i;
 
 }
 ```
@@ -1773,59 +1772,59 @@ if they become equal after applying the backspaces.
 ```java
 public class Solution {
 
-public boolean backspaceCompare(String s, String t) {
+    public boolean backspaceCompare(String s, String t) {
 
-int indexS = s.length() - 1, indexT = t.length() - 1;
+        int indexS = s.length() - 1, indexT = t.length() - 1;
 
-while (indexS >= 0 || indexT >= 0) {
+        while (indexS >= 0 || indexT >= 0) {
 
-indexS = nextValidChar(s, indexS);
+            indexS = nextValidChar(s, indexS);
 
-indexT = nextValidChar(t, indexT);
+            indexT = nextValidChar(t, indexT);
 
-char charS = indexS >= 0 ? s.charAt(indexS) : \'\0\';
+            char charS = indexS >= 0 ? s.charAt(indexS) : \'\0\';
 
-char charT = indexT >= 0 ? t.charAt(indexT) : \'\0\';
+            char charT = indexT >= 0 ? t.charAt(indexT) : \'\0\';
 
-if (charS != charT) return false;
+            if (charS != charT) return false;
 
-indexS--;
+            indexS--;
 
-indexT--;
+            indexT--;
 
-}
+        }
 
-return true;
+        return true;
 
-}
+    }
 
-private int nextValidChar(String str, int index) {
+    private int nextValidChar(String str, int index) {
 
-int backspace = 0;
+        int backspace = 0;
 
-while (index >= 0) {
+        while (index >= 0) {
 
-if (str.charAt(index) == \'#\') {
+            if (str.charAt(index) == \'#\') {
 
-backspace++;
+                backspace++;
 
-} else if (backspace > 0) {
+            } else if (backspace > 0) {
 
-backspace--;
+                backspace--;
 
-} else {
+            } else {
 
-break;
+                break;
 
-}
+            }
 
-index--;
+            index--;
 
-}
+        }
 
-return index;
+        return index;
 
-}
+    }
 
 }
 ```
@@ -1883,27 +1882,27 @@ could result from long-pressing some characters of the intended name.
 ```java
 public boolean isLongPressedName(String name, String typed) {
 
-int i = 0, j = 0;
+    int i = 0, j = 0;
 
-while (j < typed.length()) {
+    while (j < typed.length()) {
 
-if (i < name.length() && name.charAt(i) == typed.charAt(j)) {
+        if (i < name.length() && name.charAt(i) == typed.charAt(j)) {
 
-i++; j++;
+            i++; j++;
 
-} else if (j > 0 && typed.charAt(j) == typed.charAt(j - 1)) {
+        } else if (j > 0 && typed.charAt(j) == typed.charAt(j - 1)) {
 
-j++;
+            j++;
 
-} else {
+        } else {
 
-return false;
+            return false;
 
-}
+        }
 
-}
+    }
 
-return i == name.length();
+    return i == name.length();
 
 }
 ```
@@ -1947,53 +1946,53 @@ delete, or replace) apart.
 ```java
 class Solution {
 
-public boolean isOneEditDistance(String s, String t) {
+    public boolean isOneEditDistance(String s, String t) {
 
-int n = s.length(), m = t.length();
+        int n = s.length(), m = t.length();
 
-// Ensure s is the shorter (or equal-length) string, to simplify cases
+        // Ensure s is the shorter (or equal-length) string, to simplify cases
 
-if (n > m) return isOneEditDistance(t, s);
+        if (n > m) return isOneEditDistance(t, s);
 
-// Lengths differ by 2+ -> can\'t be one edit apart
+        // Lengths differ by 2+ -> can\'t be one edit apart
 
-if (m - n > 1) return false;
+        if (m - n > 1) return false;
 
-for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
 
-if (s.charAt(i) != t.charAt(i)) {
+            if (s.charAt(i) != t.charAt(i)) {
 
-if (n == m) {
+                if (n == m) {
 
-// Same length -> must be a REPLACE: rest of strings must match
-exactly
+                    // Same length -> must be a REPLACE: rest of strings must match
+                    exactly
 
-return s.substring(i + 1).equals(t.substring(i + 1));
+                    return s.substring(i + 1).equals(t.substring(i + 1));
 
-} else {
+                } else {
 
-// s is shorter -> must be an INSERT into s (or delete from t)
+                    // s is shorter -> must be an INSERT into s (or delete from t)
 
-// Skip the extra char in t, then rest must match exactly
+                    // Skip the extra char in t, then rest must match exactly
 
-return s.substring(i).equals(t.substring(i + 1));
+                    return s.substring(i).equals(t.substring(i + 1));
 
-}
+                }
 
-}
+            }
 
-}
+        }
 
-// No mismatch found in the shared prefix:
+        // No mismatch found in the shared prefix:
 
-// - if lengths equal, strings are identical -> 0 edits -> false
+        // - if lengths equal, strings are identical -> 0 edits -> false
 
-// - if lengths differ by 1, the extra char in t is the one edit ->
-true
+        // - if lengths differ by 1, the extra char in t is the one edit ->
+        true
 
-return n != m;
+        return n != m;
 
-}
+    }
 
 }
 ```
@@ -2048,25 +2047,25 @@ intervals.
 public int[][] intervalIntersection(int[][] a, int[][] b)
 {
 
-List<int[]> result = new ArrayList<>();
+    List<int[]> result = new ArrayList<>();
 
-int i = 0, j = 0;
+    int i = 0, j = 0;
 
-while (i < a.length && j < b.length) {
+    while (i < a.length && j < b.length) {
 
-int start = Math.max(a[i][0], b[j][0]);
+        int start = Math.max(a[i][0], b[j][0]);
 
-int end = Math.min(a[i][1], b[j][1]);
+        int end = Math.min(a[i][1], b[j][1]);
 
-if (start <= end) result.add(new int[]{start, end});
+        if (start <= end) result.add(new int[]{start, end});
 
-if (a[i][1] < b[j][1]) i++;
+        if (a[i][1] < b[j][1]) i++;
 
-else j++;
+        else j++;
 
-}
+    }
 
-return result.toArray(new int[result.size()][]);
+    return result.toArray(new int[result.size()][]);
 
 }
 ```
@@ -2130,19 +2129,19 @@ starting with the first string; append any leftover letters.
 ```java
 public String mergeAlternately(String word1, String word2) {
 
-StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
 
-int i = 0, j = 0;
+    int i = 0, j = 0;
 
-while (i < word1.length() || j < word2.length()) {
+    while (i < word1.length() || j < word2.length()) {
 
-if (i < word1.length()) sb.append(word1.charAt(i++));
+        if (i < word1.length()) sb.append(word1.charAt(i++));
 
-if (j < word2.length()) sb.append(word2.charAt(j++));
+        if (j < word2.length()) sb.append(word2.charAt(j++));
 
-}
+    }
 
-return sb.toString();
+    return sb.toString();
 
 }
 ```
@@ -2171,15 +2170,15 @@ Reverse an array of characters in-place.
 ```java
 public void reverseString(char[] s) {
 
-int left = 0, right = s.length - 1;
+    int left = 0, right = s.length - 1;
 
-while (left < right) {
+    while (left < right) {
 
-char t = s[left]; s[left] = s[right]; s[right] = t;
+        char t = s[left]; s[left] = s[right]; s[right] = t;
 
-left++; right--;
+        left++; right--;
 
-}
+    }
 
 }
 ```
@@ -2205,25 +2204,25 @@ Reverse only the vowels of a string, leaving other characters in place.
 ```java
 public String reverseVowels(String s) {
 
-char[] arr = s.toCharArray();
+    char[] arr = s.toCharArray();
 
-String vowels = \"aeiouAEIOU\";
+    String vowels = \"aeiouAEIOU\";
 
-int left = 0, right = arr.length - 1;
+    int left = 0, right = arr.length - 1;
 
-while (left < right) {
+    while (left < right) {
 
-while (left < right && vowels.indexOf(arr[left]) == -1) left++;
+        while (left < right && vowels.indexOf(arr[left]) == -1) left++;
 
-while (left < right && vowels.indexOf(arr[right]) == -1) right--;
+        while (left < right && vowels.indexOf(arr[right]) == -1) right--;
 
-char t = arr[left]; arr[left] = arr[right]; arr[right] = t;
+        char t = arr[left]; arr[left] = arr[right]; arr[right] = t;
 
-left++; right--;
+        left++; right--;
 
-}
+    }
 
-return new String(arr);
+    return new String(arr);
 
 }
 ```
@@ -2252,20 +2251,20 @@ words, removing extra whitespace.
 ```java
 public String reverseWords(String s) {
 
-String[] words = s.trim().split(\"\\s+\");
+    String[] words = s.trim().split(\"\\s+\");
 
-int left = 0, right = words.length - 1;
+    int left = 0, right = words.length - 1;
 
-while (left < right) {
+    while (left < right) {
 
-String t = words[left]; words[left] = words[right];
-words[right] = t;
+        String t = words[left]; words[left] = words[right];
+        words[right] = t;
 
-left++; right--;
+        left++; right--;
 
-}
+    }
 
-return String.join(\" \", words);
+    return String.join(\" \", words);
 
 }
 ```
@@ -2296,55 +2295,55 @@ word order and whitespace.
 ```java
 public String reverseWords(String s) {
 
-// String[] arr = s.split(\" \");
+    // String[] arr = s.split(\" \");
 
-// StringBuilder sb = new StringBuilder();
+    // StringBuilder sb = new StringBuilder();
 
-// for(int i=0;i<arr.length;i++) {
+    // for(int i=0;i<arr.length;i++) {
 
-// arr[i] = reverse(arr[i]);
+    // arr[i] = reverse(arr[i]);
 
-// }
+    // }
 
-// return String.join(\" \", arr);
+    // return String.join(\" \", arr);
 
-String[] words = s.split(\" \");
+    String[] words = s.split(\" \");
 
-StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
 
-for(String word: words) {
+    for(String word: words) {
 
-sb.append(new StringBuilder(word).reverse()).append(\" \");
+        sb.append(new StringBuilder(word).reverse()).append(\" \");
 
-}
+    }
 
-return sb.toString().trim();
+    return sb.toString().trim();
 
 }
 
 private String reverse(String word){
 
-char[] arr = word.toCharArray();
+    char[] arr = word.toCharArray();
 
-int left =0;
+    int left =0;
 
-int right = word.length()-1;
+    int right = word.length()-1;
 
-while(left < right) {
+    while(left < right) {
 
-char temp = arr[left];
+        char temp = arr[left];
 
-arr[left] = arr[right];
+        arr[left] = arr[right];
 
-arr[right] = temp;
+        arr[right] = temp;
 
-left++;
+        left++;
 
-right--;
+        right--;
 
-}
+    }
 
-return new String(arr);
+    return new String(arr);
 
 }
 ```
@@ -2371,27 +2370,27 @@ Rotate an array to the right by k steps, in-place.
 ```java
 public void rotate(int[] nums, int k) {
 
-int n = nums.length;
+    int n = nums.length;
 
-k %= n;
+    k %= n;
 
-reverse(nums, 0, n - 1);
+    reverse(nums, 0, n - 1);
 
-reverse(nums, 0, k - 1);
+    reverse(nums, 0, k - 1);
 
-reverse(nums, k, n - 1);
+    reverse(nums, k, n - 1);
 
 }
 
 private void reverse(int[] nums, int left, int right) {
 
-while (left < right) {
+    while (left < right) {
 
-int t = nums[left]; nums[left] = nums[right]; nums[right] = t;
+        int t = nums[left]; nums[left] = nums[right]; nums[right] = t;
 
-left++; right--;
+        left++; right--;
 
-}
+    }
 
 }
 ```
@@ -2419,23 +2418,23 @@ Given a string, reverse only the letter characters, leaving non-letters
 ```java
 public String reverseOnlyLetters(String s) {
 
-char[] arr = s.toCharArray();
+    char[] arr = s.toCharArray();
 
-int left = 0, right = arr.length - 1;
+    int left = 0, right = arr.length - 1;
 
-while (left < right) {
+    while (left < right) {
 
-while (left < right && !Character.isLetter(arr[left])) left++;
+        while (left < right && !Character.isLetter(arr[left])) left++;
 
-while (left < right && !Character.isLetter(arr[right])) right--;
+        while (left < right && !Character.isLetter(arr[right])) right--;
 
-char t = arr[left]; arr[left] = arr[right]; arr[right] = t;
+        char t = arr[left]; arr[left] = arr[right]; arr[right] = t;
 
-left++; right--;
+        left++; right--;
 
-}
+    }
 
-return new String(arr);
+    return new String(arr);
 
 }
 ```
@@ -2462,63 +2461,63 @@ in-place; if none exists, rearrange to the lowest order.
 ```java
 class Solution {
 
-public void nextPermutation(int[] nums) {
+    public void nextPermutation(int[] nums) {
 
-// Step 1: Find the breakpoint
+        // Step 1: Find the breakpoint
 
-int i = nums.length - 2;
+        int i = nums.length - 2;
 
-while (i >= 0 && nums[i] >= nums[i + 1]) {
+        while (i >= 0 && nums[i] >= nums[i + 1]) {
 
-i--;
+            i--;
 
-}
+        }
 
-// Step 2: Find the next greater element
+        // Step 2: Find the next greater element
 
-if (i >= 0) {
+        if (i >= 0) {
 
-int j = nums.length - 1;
+            int j = nums.length - 1;
 
-while (nums[j] <= nums[i]) {
+            while (nums[j] <= nums[i]) {
 
-j--;
+                j--;
 
-}
+            }
 
-swap(nums, i, j);
+            swap(nums, i, j);
 
-}
+        }
 
-// Step 3: Make suffix smallest
+        // Step 3: Make suffix smallest
 
-reverse(nums, i + 1, nums.length - 1);
+        reverse(nums, i + 1, nums.length - 1);
 
-}
+    }
 
-private void swap(int[] nums, int i, int j) {
+    private void swap(int[] nums, int i, int j) {
 
-int temp = nums[i];
+        int temp = nums[i];
 
-nums[i] = nums[j];
+        nums[i] = nums[j];
 
-nums[j] = temp;
+        nums[j] = temp;
 
-}
+    }
 
-private void reverse(int[] nums, int left, int right) {
+    private void reverse(int[] nums, int left, int right) {
 
-while (left < right) {
+        while (left < right) {
 
-swap(nums, left, right);
+            swap(nums, left, right);
 
-left++;
+            left++;
 
-right--;
+            right--;
 
-}
+        }
 
-}
+    }
 
 }
 ```
@@ -2579,85 +2578,85 @@ of the array); return the sequence of flip sizes.
 ```java
 class Solution {
 
-public List<Integer> pancakeSort(int[] arr) {
+    public List<Integer> pancakeSort(int[] arr) {
 
-List<Integer> result = new ArrayList<>();
+        List<Integer> result = new ArrayList<>();
 
-int n = arr.length;
+        int n = arr.length;
 
-for (int size = n; size > 1; size--) {
+        for (int size = n; size > 1; size--) {
 
-// Find index of max element in arr[0...size-1]
+            // Find index of max element in arr[0...size-1]
 
-int maxIdx = findMaxIndex(arr, size);
+            int maxIdx = findMaxIndex(arr, size);
 
-// Already in correct position, skip this round
+            // Already in correct position, skip this round
 
-if (maxIdx == size - 1) {
+            if (maxIdx == size - 1) {
 
-continue;
+                continue;
 
-}
+            }
 
-// Step 1: bring max to the front (skip if already there)
+            // Step 1: bring max to the front (skip if already there)
 
-if (maxIdx != 0) {
+            if (maxIdx != 0) {
 
-flip(arr, maxIdx + 1);
+                flip(arr, maxIdx + 1);
 
-result.add(maxIdx + 1);
+                result.add(maxIdx + 1);
 
-}
+            }
 
-// Step 2: flip it from front to its correct position at \'size - 1\'
+            // Step 2: flip it from front to its correct position at \'size - 1\'
 
-flip(arr, size);
+            flip(arr, size);
 
-result.add(size);
+            result.add(size);
 
-}
+        }
 
-return result;
+        return result;
 
-}
+    }
 
-private int findMaxIndex(int[] arr, int size) {
+    private int findMaxIndex(int[] arr, int size) {
 
-int maxIdx = 0;
+        int maxIdx = 0;
 
-for (int i = 1; i < size; i++) {
+        for (int i = 1; i < size; i++) {
 
-if (arr[i] > arr[maxIdx]) {
+            if (arr[i] > arr[maxIdx]) {
 
-maxIdx = i;
+                maxIdx = i;
 
-}
+            }
 
-}
+        }
 
-return maxIdx;
+        return maxIdx;
 
-}
+    }
 
-private void flip(int[] arr, int k) {
+    private void flip(int[] arr, int k) {
 
-int left = 0, right = k - 1;
+        int left = 0, right = k - 1;
 
-while (left < right) {
+        while (left < right) {
 
-int temp = arr[left];
+            int temp = arr[left];
 
-arr[left] = arr[right];
+            arr[left] = arr[right];
 
-arr[right] = temp;
+            arr[right] = temp;
 
-left++;
+            left++;
 
-right--;
+            right--;
 
-}
+        }
 
-}
+    }
 
 }
 ```
@@ -2703,42 +2702,42 @@ Given a string, find the longest palindromic substring.
 ```java
 public String longestPalindrome(String s) {
 
-if (s.length() < 1) return \"\";
+    if (s.length() < 1) return \"\";
 
-int start = 0, end = 0;
+    int start = 0, end = 0;
 
-for (int i = 0; i < s.length(); i++) {
+    for (int i = 0; i < s.length(); i++) {
 
-int len1 = expandFromCenter(s, i, i);
+        int len1 = expandFromCenter(s, i, i);
 
-int len2 = expandFromCenter(s, i, i + 1);
+        int len2 = expandFromCenter(s, i, i + 1);
 
-int len = Math.max(len1, len2);
+        int len = Math.max(len1, len2);
 
-if (len > end - start + 1) {
+        if (len > end - start + 1) {
 
-start = i - (len - 1) / 2;
+            start = i - (len - 1) / 2;
 
-end = i + len / 2;
+            end = i + len / 2;
 
-}
+        }
 
-}
+    }
 
-return s.substring(start, end + 1);
+    return s.substring(start, end + 1);
 
 }
 
 private int expandFromCenter(String s, int left, int right) {
 
-while (left >= 0 && right < s.length() && s.charAt(left) ==
-s.charAt(right)) {
+    while (left >= 0 && right < s.length() && s.charAt(left) ==
+    s.charAt(right)) {
 
-left--; right++;
+        left--; right++;
 
-}
+    }
 
-return right - left - 1;
+    return right - left - 1;
 
 }
 ```
@@ -2766,32 +2765,32 @@ Given a string, count how many substrings are palindromes.
 ```java
 public int countSubstrings(String s) {
 
-int count = 0;
+    int count = 0;
 
-for (int i = 0; i < s.length(); i++) {
+    for (int i = 0; i < s.length(); i++) {
 
-count += expandFromCenter(s, i, i);
+        count += expandFromCenter(s, i, i);
 
-count += expandFromCenter(s, i, i + 1);
+        count += expandFromCenter(s, i, i + 1);
 
-}
+    }
 
-return count;
+    return count;
 
 }
 
 private int expandFromCenter(String s, int left, int right) {
 
-int count = 0;
+    int count = 0;
 
-while (left >= 0 && right < s.length() && s.charAt(left) ==
-s.charAt(right)) {
+    while (left >= 0 && right < s.length() && s.charAt(left) ==
+    s.charAt(right)) {
 
-count++; left--; right++;
+        count++; left--; right++;
 
-}
+    }
 
-return count;
+    return count;
 
 }
 ```
@@ -2846,73 +2845,73 @@ adding characters only in front of s.
 ```java
 using two pointer public String shortestPalindrome(String s) {
 
-for (int i = s.length() - 1; i >= 0; i--) {
+    for (int i = s.length() - 1; i >= 0; i--) {
 
-if (isPalindrome(s, 0, i)) {
+        if (isPalindrome(s, 0, i)) {
 
-String remaining = s.substring(i + 1);
+            String remaining = s.substring(i + 1);
 
-return new StringBuilder(remaining)
+            return new StringBuilder(remaining)
 
-.reverse()
+            .reverse()
 
-.append(s)
+            .append(s)
 
-.toString();
+            .toString();
 
-}
+        }
 
-}
+    }
 
-return s;
+    return s;
 
 }
 
 private boolean isPalindrome(String str, int start, int end) {
 
-while (start < end) {
+    while (start < end) {
 
-if (str.charAt(start) != str.charAt(end)) {
+        if (str.charAt(start) != str.charAt(end)) {
 
-return false;
+            return false;
 
-}
+        }
 
-start++;
+        start++;
 
-end--;
+        end--;
 
-}
+    }
 
-return true;
+    return true;
 
 }
 
 public String shortestPalindrome(String s) {
 
-String combined = s + \"#\" + new StringBuilder(s).reverse();
+    String combined = s + \"#\" + new StringBuilder(s).reverse();
 
-int n = combined.length();
+    int n = combined.length();
 
-int[] lps = new int[n];
+    int[] lps = new int[n];
 
-for (int i = 1; i < n; i++) {
+    for (int i = 1; i < n; i++) {
 
-int len = lps[i - 1];
+        int len = lps[i - 1];
 
-while (len > 0 && combined.charAt(i) != combined.charAt(len)) len =
-lps[len - 1];
+        while (len > 0 && combined.charAt(i) != combined.charAt(len)) len =
+        lps[len - 1];
 
-if (combined.charAt(i) == combined.charAt(len)) len++;
+        if (combined.charAt(i) == combined.charAt(len)) len++;
 
-lps[i] = len;
+        lps[i] = len;
 
-}
+    }
 
-int palinLen = lps[n - 1];
+    int palinLen = lps[n - 1];
 
-return new StringBuilder(s.substring(palinLen)).reverse().toString() +
-s;
+    return new StringBuilder(s.substring(palinLen)).reverse().toString() +
+    s;
 
 }
 ```
@@ -2963,32 +2962,32 @@ palindrome after removing at most k characters.
 ```java
 public boolean isValidPalindrome(String s, int k) {
 
-int n = s.length();
+    int n = s.length();
 
-int[][] dp = new int[n][n];
+    int[][] dp = new int[n][n];
 
-for (int len = 2; len <= n; len++) {
+    for (int len = 2; len <= n; len++) {
 
-for (int left = 0; left <= n - len; left++) {
+        for (int left = 0; left <= n - len; left++) {
 
-int right = left + len - 1;
+            int right = left + len - 1;
 
-if (s.charAt(left) == s.charAt(right)) {
+            if (s.charAt(left) == s.charAt(right)) {
 
-dp[left][right] = dp[left + 1][right - 1];
+                dp[left][right] = dp[left + 1][right - 1];
 
-} else {
+            } else {
 
-dp[left][right] = 1 + Math.min(dp[left + 1][right],
-dp[left][right - 1]);
+                dp[left][right] = 1 + Math.min(dp[left + 1][right],
+                dp[left][right - 1]);
 
-}
+            }
 
-}
+        }
 
-}
+    }
 
-return dp[0][n - 1] <= k;
+    return dp[0][n - 1] <= k;
 
 }
 ```
@@ -3019,35 +3018,35 @@ each with the same sum.
 ```java
 public boolean canThreePartsEqualSum(int[] arr) {
 
-int sum = Arrays.stream(arr).sum();
+    int sum = Arrays.stream(arr).sum();
 
-if (sum % 3 != 0) {
+    if (sum % 3 != 0) {
 
-return false;
+        return false;
 
-}
+    }
 
-int part = sum / 3;
+    int part = sum / 3;
 
-int currentSum = 0;
+    int currentSum = 0;
 
-int count = 0;
+    int count = 0;
 
-for (int i = 0; i < arr.length; i++) {
+    for (int i = 0; i < arr.length; i++) {
 
-currentSum += arr[i];
+        currentSum += arr[i];
 
-if (currentSum == part) {
+        if (currentSum == part) {
 
-count++;
+            count++;
 
-currentSum = 0;
+            currentSum = 0;
 
-}
+        }
 
-}
+    }
 
-return count >= 3;
+    return count >= 3;
 
 }
 ```
@@ -3088,17 +3087,17 @@ Given an array, reorder it so that nums[0] < nums[1] > nums[2]
 ```java
 public void wiggleSort(int[] nums) {
 
-int[] sorted = nums.clone();
+    int[] sorted = nums.clone();
 
-Arrays.sort(sorted);
+    Arrays.sort(sorted);
 
-int n = nums.length;
+    int n = nums.length;
 
-int right = n - 1;
+    int right = n - 1;
 
-for (int i = 1; i < n; i += 2) nums[i] = sorted[right--];
+    for (int i = 1; i < n; i += 2) nums[i] = sorted[right--];
 
-for (int i = 0; i < n; i += 2) nums[i] = sorted[right--];
+    for (int i = 0; i < n; i += 2) nums[i] = sorted[right--];
 
 }
 ```
@@ -3129,43 +3128,43 @@ order.
 public int[] sortTransformedArray(int[] nums, int a, int b, int c)
 {
 
-int n = nums.length;
+    int n = nums.length;
 
-int[] result = new int[n];
+    int[] result = new int[n];
 
-int left = 0, right = n - 1;
+    int left = 0, right = n - 1;
 
-int index = a >= 0 ? n - 1 : 0;
+    int index = a >= 0 ? n - 1 : 0;
 
-while (left <= right) {
+    while (left <= right) {
 
-int leftVal = quad(nums[left], a, b, c);
+        int leftVal = quad(nums[left], a, b, c);
 
-int rightVal = quad(nums[right], a, b, c);
+        int rightVal = quad(nums[right], a, b, c);
 
-if (a >= 0) {
+        if (a >= 0) {
 
-if (leftVal > rightVal) { result[index--] = leftVal; left++; }
+            if (leftVal > rightVal) { result[index--] = leftVal; left++; }
 
-else { result[index--] = rightVal; right--; }
+            else { result[index--] = rightVal; right--; }
 
-} else {
+        } else {
 
-if (leftVal < rightVal) { result[index++] = leftVal; left++; }
+            if (leftVal < rightVal) { result[index++] = leftVal; left++; }
 
-else { result[index++] = rightVal; right--; }
+            else { result[index++] = rightVal; right--; }
 
-}
+        }
 
-}
+    }
 
-return result;
+    return result;
 
 }
 
 private int quad(int x, int a, int b, int c) {
 
-return a * x * x + b * x + c;
+    return a * x * x + b * x + c;
 
 }
 ```
@@ -3273,19 +3272,19 @@ the minimum resulting length.
 ```java
 public int minimumLength(String s) {
 
-int left = 0, right = s.length() - 1;
+    int left = 0, right = s.length() - 1;
 
-while (left < right && s.charAt(left) == s.charAt(right)) {
+    while (left < right && s.charAt(left) == s.charAt(right)) {
 
-char c = s.charAt(left);
+        char c = s.charAt(left);
 
-while (left <= right && s.charAt(left) == c) left++;
+        while (left <= right && s.charAt(left) == c) left++;
 
-while (right >= left && s.charAt(right) == c) right--;
+        while (right >= left && s.charAt(right) == c) right--;
 
-}
+    }
 
-return right - left + 1;
+    return right - left + 1;
 
 }
 ```
@@ -3314,29 +3313,29 @@ j such that nums[i] + nums[j] < target.
 ```java
 public int countPairs(List<Integer> nums, int target) {
 
-List<Integer> sorted = new ArrayList<>(nums);
+    List<Integer> sorted = new ArrayList<>(nums);
 
-Collections.sort(sorted);
+    Collections.sort(sorted);
 
-int left = 0, right = sorted.size() - 1, count = 0;
+    int left = 0, right = sorted.size() - 1, count = 0;
 
-while (left < right) {
+    while (left < right) {
 
-if (sorted.get(left) + sorted.get(right) < target) {
+        if (sorted.get(left) + sorted.get(right) < target) {
 
-count += right - left;
+            count += right - left;
 
-left++;
+            left++;
 
-} else {
+        } else {
 
-right--;
+            right--;
 
-}
+        }
 
-}
+    }
 
-return count;
+    return count;
 
 }
 ```
@@ -3396,37 +3395,37 @@ the maximum score achievable.
 ```java
 public int bagOfTokensScore(int[] tokens, int power) {
 
-Arrays.sort(tokens);
+    Arrays.sort(tokens);
 
-int left = 0, right = tokens.length - 1;
+    int left = 0, right = tokens.length - 1;
 
-int score = 0, maxScore = 0;
+    int score = 0, maxScore = 0;
 
-while (left <= right) {
+    while (left <= right) {
 
-if (power >= tokens[left]) {
+        if (power >= tokens[left]) {
 
-power -= tokens[left++];
+            power -= tokens[left++];
 
-score++;
+            score++;
 
-maxScore = Math.max(maxScore, score);
+            maxScore = Math.max(maxScore, score);
 
-} else if (score > 0 && left < right) {
+        } else if (score > 0 && left < right) {
 
-power += tokens[right--];
+            power += tokens[right--];
 
-score--;
+            score--;
 
-} else {
+        } else {
 
-break;
+            break;
 
-}
+        }
 
-}
+    }
 
-return maxScore;
+    return maxScore;
 
 }
 ```
@@ -3549,22 +3548,22 @@ elements to x, sorted in ascending order.
 public List<Integer> findClosestElements(int[] arr, int k, int x)
 {
 
-int left = 0, right = arr.length - 1;
+    int left = 0, right = arr.length - 1;
 
-while (right - left + 1 > k) {
+    while (right - left + 1 > k) {
 
-if (Math.abs(arr[left] - x) <= Math.abs(arr[right] - x))
-right--;
+        if (Math.abs(arr[left] - x) <= Math.abs(arr[right] - x))
+        right--;
 
-else left++;
+        else left++;
 
-}
+    }
 
-List<Integer> result = new ArrayList<>();
+    List<Integer> result = new ArrayList<>();
 
-for (int i = left; i <= right; i++) result.add(arr[i]);
+    for (int i = left; i <= right; i++) result.add(arr[i]);
 
-return result;
+    return result;
 
 }
 ```
@@ -3611,29 +3610,29 @@ that is strictly less than k.
 ```java
 public int twoSumLessThanK(int[] nums, int k) {
 
-Arrays.sort(nums);
+    Arrays.sort(nums);
 
-int left = 0, right = nums.length - 1, best = -1;
+    int left = 0, right = nums.length - 1, best = -1;
 
-while (left < right) {
+    while (left < right) {
 
-int sum = nums[left] + nums[right];
+        int sum = nums[left] + nums[right];
 
-if (sum < k) {
+        if (sum < k) {
 
-best = Math.max(best, sum);
+            best = Math.max(best, sum);
 
-left++;
+            left++;
 
-} else {
+        } else {
 
-right--;
+            right--;
 
-}
+        }
 
-}
+    }
 
-return best;
+    return best;
 
 }
 ```
@@ -3663,51 +3662,51 @@ array.
 ```java
 class Solution {
 
-public int minDifference(int[] nums) {
+    public int minDifference(int[] nums) {
 
-int n = nums.length;
+        int n = nums.length;
 
-if(n <= 4) return 0;
+        if(n <= 4) return 0;
 
-// if there are less than 5 elements we make 3 of them the smallest
-and min diff will be 0 e.g 4,5,6,7 -> 4,4,4,4. -> 4-4 =0
+        // if there are less than 5 elements we make 3 of them the smallest
+        and min diff will be 0 e.g 4,5,6,7 -> 4,4,4,4. -> 4-4 =0
 
-Arrays.sort(nums);
+        Arrays.sort(nums);
 
-// since we have 3 possible moves we have to consider following
-scenarios
+        // since we have 3 possible moves we have to consider following
+        scenarios
 
-// 1, 5, 6, 14, 15, 20
+        // 1, 5, 6, 14, 15, 20
 
-// 0 1. 2. 3. 4. 5
+        // 0 1. 2. 3. 4. 5
 
-// Left 0 and right 3 (that means remove last 3 largest elements ).
--> 1,5,6. -> 6-1 = 5
+        // Left 0 and right 3 (that means remove last 3 largest elements ).
+        -> 1,5,6. -> 6-1 = 5
 
-// Left 1 and right 2 (that means remove 1 smallest and last 2 largest
-elements ). -> 5,6,14. -> 14-5 = 9
+        // Left 1 and right 2 (that means remove 1 smallest and last 2 largest
+        elements ). -> 5,6,14. -> 14-5 = 9
 
-// Left 2 and right 1 (that means remove 2 smallest and 1 largest
-element). -> 6,14,15. -> 15-6 =9
+        // Left 2 and right 1 (that means remove 2 smallest and 1 largest
+        element). -> 6,14,15. -> 15-6 =9
 
-// Left 3 and right 0 (that means remove 3 smallest element s). ->
-14,15,20 -> 20-14 =6
+        // Left 3 and right 0 (that means remove 3 smallest element s). ->
+        14,15,20 -> 20-14 =6
 
-int min = Integer.MAX_VALUE;
+        int min = Integer.MAX_VALUE;
 
-for(int left =0; left<=3;left++) {
+        for(int left =0; left<=3;left++) {
 
-int right = 3-left;
+            int right = 3-left;
 
-System.out.println(nums[n-1-right] - nums[left]);
+            System.out.println(nums[n-1-right] - nums[left]);
 
-min = Math.min(min, nums[n-1-right] - nums[left]);
+            min = Math.min(min, nums[n-1-right] - nums[left]);
 
-}
+        }
 
-return min;
+        return min;
 
-}
+    }
 
 }
 ```
@@ -3846,21 +3845,21 @@ construct a permutation of 0..n that matches the pattern.
 ```java
 public int[] diStringMatch(String s) {
 
-int n = s.length();
+    int n = s.length();
 
-int low = 0, high = n;
+    int low = 0, high = n;
 
-int[] result = new int[n + 1];
+    int[] result = new int[n + 1];
 
-for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
 
-result[i] = s.charAt(i) == \'I\' ? low++ : high--;
+        result[i] = s.charAt(i) == \'I\' ? low++ : high--;
 
-}
+    }
 
-result[n] = low;
+    result[n] = low;
 
-return result;
+    return result;
 
 }
 ```
@@ -3937,19 +3936,19 @@ sorted in non-decreasing order.
 ```java
 public int heightChecker(int[] heights) {
 
-int[] expected = heights.clone();
+    int[] expected = heights.clone();
 
-Arrays.sort(expected);
+    Arrays.sort(expected);
 
-int count = 0;
+    int count = 0;
 
-for (int i = 0; i < heights.length; i++) {
+    for (int i = 0; i < heights.length; i++) {
 
-if (heights[i] != expected[i]) count++;
+        if (heights[i] != expected[i]) count++;
 
-}
+    }
 
-return count;
+    return count;
 
 }
 ```
@@ -3999,43 +3998,43 @@ and sentence2 are similar. Otherwise, return false.
 public boolean areSentencesSimilar(String sentence1, String sentence2)
 {
 
-String[] s1 = sentence1.split(\" \");
+    String[] s1 = sentence1.split(\" \");
 
-String[] s2 = sentence2.split(\" \");
+    String[] s2 = sentence2.split(\" \");
 
-// make sure s1 is shorter one
+    // make sure s1 is shorter one
 
-if(s1.length > s2.length) {
+    if(s1.length > s2.length) {
 
-String[] temp = s1;
+        String[] temp = s1;
 
-s1 = s2;
+        s1 = s2;
 
-s2 = temp;
+        s2 = temp;
 
-}
+    }
 
-int n = s1.length;
+    int n = s1.length;
 
-int m = s2.length;
+    int m = s2.length;
 
-// prefix match
+    // prefix match
 
-int i=0, j=0;
+    int i=0, j=0;
 
-while(i < n && s1[i].equals(s2[i])) {
+    while(i < n && s1[i].equals(s2[i])) {
 
-i++;
+        i++;
 
-}
+    }
 
-while(j < n-i && s1[n - 1 - j].equals(s2[m-1-j])) {
+    while(j < n-i && s1[n - 1 - j].equals(s2[m-1-j])) {
 
-j++;
+        j++;
 
-}
+    }
 
-return i+j >= n;
+    return i+j >= n;
 
 }
 ```
@@ -4088,43 +4087,43 @@ Return the resulting string.
 ```java
 public String reversePrefix(String word, char ch) {
 
-if(word == null || word.length() < 1) return word;
+    if(word == null || word.length() < 1) return word;
 
-int end =0;
+    int end =0;
 
-for(char c: word.toCharArray()) {
+    for(char c: word.toCharArray()) {
 
-if(c == ch) {
+        if(c == ch) {
 
-return reverse(word.toCharArray(), 0, end++);
+            return reverse(word.toCharArray(), 0, end++);
 
-}
+        }
 
-end++;
+        end++;
 
-}
+    }
 
-return word;
+    return word;
 
 }
 
 public String reverse(char[] word, int start, int end){
 
-while(start <= end) {
+    while(start <= end) {
 
-char temp = word[start];
+        char temp = word[start];
 
-word[start] = word[end];
+        word[start] = word[end];
 
-word[end] = temp;
+        word[end] = temp;
 
-start++;
+        start++;
 
-end--;
+        end--;
 
-}
+    }
 
-return new String(word);
+    return new String(word);
 
 }
 ```
@@ -4148,3 +4147,5 @@ _None noted._
 
 5. reverse(word.toCharArray(), 0, end++) → end++ is unnecessary because
    you return immediately; use end.
+
+````
