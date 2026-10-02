@@ -246,35 +246,20 @@ Given an array and a target, count the number of triplets whose sum is strictly 
 
 ```java
 public int threeSumSmaller(int[] nums, int target) {
-
     Arrays.sort(nums);
-
     int count = 0;
-
     for (int i = 0; i < nums.length - 2; i++) {
-
         int left = i + 1, right = nums.length - 1;
-
         while (left < right) {
-
             if (nums[i] + nums[left] + nums[right] < target) {
-
                 count += right - left;
-
                 left++;
-
             } else {
-
                 right--;
-
             }
-
         }
-
     }
-
     return count;
-
 }
 ```
 **Logic / Approach:**
@@ -284,9 +269,7 @@ enough, every index between left and right also satisfies the condition
 with the current left, so right-left pairs are counted in one step.
 
 Step 1: Fix i = 0 (nums[i] = -1)
-
 left = 1 (1)
-
 right = 4 (4)
 
 sum = -1 + 1 + 4 = 4 Since: 4 < 6 every element between left and right
@@ -295,17 +278,12 @@ with the current left also works.
 Valid triplets are: (-1,1,2) (-1,1,3) (-1,1,4)
 
 Instead of checking each one, we simply do:
-
 count += right - left
-
 += 4 - 1
-
 += 3
 
 Current count = 3 Move left++.
-
 Why count += right - left?
-
 When: nums[i] + nums[left] + nums[right] < target
 
 the current right is the largest possible third element. Since the array
@@ -319,62 +297,37 @@ not doing count +=right-left
 
 ### 5. 4Sum (MEDIUM)
 
-*Difficulty: Medium*
-
 **Description:**
 
-Given an array and a target, find all unique quadruplets that sum to
-target.
+Given an array and a target, find all unique quadruplets that sum to target.
 
 **Code:**
 
 ```java
 public List<List<Integer>> fourSum(int[] nums, int target) {
-
     Arrays.sort(nums);
-
     List<List<Integer>> result = new ArrayList<>();
-
     int n = nums.length;
-
     for (int i = 0; i < n - 3; i++) {
-
         if (i > 0 && nums[i] == nums[i - 1]) continue;
-
         for (int j = i + 1; j < n - 2; j++) {
-
             if (j > i + 1 && nums[j] == nums[j - 1]) continue;
-
             int left = j + 1, right = n - 1;
-
             while (left < right) {
-
                 long sum = (long) nums[i] + nums[j] + nums[left] +
                 nums[right];
-
                 if (sum == target) {
-
                     result.add(Arrays.asList(nums[i], nums[j], nums[left],
                     nums[right]));
-
                     while (left < right && nums[left] == nums[left + 1]) left++;
-
                     while (left < right && nums[right] == nums[right - 1]) right--;
-
                     left++; right--;
-
                 } else if (sum < target) left++;
-
                 else right--;
-
             }
-
         }
-
     }
-
     return result;
-
 }
 ```
 **Logic / Approach:**
@@ -389,8 +342,6 @@ not casting sum to long
 
 ### 6. Container With Most Water (MEDIUM)
 
-*Difficulty: Medium*
-
 **Description:**
 
 Given heights of vertical lines, find two lines that together with the
@@ -400,25 +351,15 @@ x-axis form a container holding the most water.
 
 ```java
 public int maxArea(int[] height) {
-
     int left = 0, right = height.length - 1, maxArea = 0;
-
     while (left < right) {
-
         int width = right - left;
-
         int minHeight = Math.min(height[left], height[right]);
-
         maxArea = Math.max(maxArea, width * minHeight);
-
         if (height[left] < height[right]) left++;
-
         else right--;
-
     }
-
     return maxArea;
-
 }
 ```
 **Logic / Approach:**
